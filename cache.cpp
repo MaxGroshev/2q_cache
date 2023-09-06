@@ -1,4 +1,5 @@
 #include "./cache.hpp"
+#include "./2q_cache.hpp"
 
 //-----------------------------------------------------------------------------------------
 
@@ -38,7 +39,7 @@ int get_init_data (size_t* cache_size, size_t* count_of_elem, std::istream & is)
     return 0;
 }
 
-int get_test_data (int* hits, const size_t count_of_elem, cache::two_q_cache_t<int>& lru,
+int get_test_data (int* hits, const size_t count_of_elem, cache::cache_t<int>& lru,
                                                           std::istream & is) {
     int val  = 0;
     for (size_t i = 0; i < count_of_elem; i++) {

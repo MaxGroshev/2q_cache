@@ -4,12 +4,12 @@
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-two_q_cache_t<T, KeyT>::two_q_cache_t (size_t size_) {
+cache_t<T, KeyT>::cache_t (size_t size_) {
     size = size_;
 }
 
 template <typename T, typename KeyT>
-two_q_cache_t<T, KeyT>::~two_q_cache_t () {
+cache_t<T, KeyT>::~cache_t () {
 
 }
 
@@ -17,7 +17,7 @@ two_q_cache_t<T, KeyT>::~two_q_cache_t () {
 
 template <typename T, typename KeyT>
 template <typename F>
-bool two_q_cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
+bool cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
     auto res = hash.find (key);
     if (res == hash.end ()) {
         if (is_full ()) {
