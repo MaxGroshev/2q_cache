@@ -6,11 +6,12 @@
 template <typename T, typename KeyT>
 cache_t<T, KeyT>::cache_t (size_t size_) {
     size = size_;
+    std::cerr << "Constructed cache with init size: " << size_ << std::endl;
 }
 
 template <typename T, typename KeyT>
 cache_t<T, KeyT>::~cache_t () {
-
+    std::cerr << "Destructed cache with init size: " << size << std::endl;
 }
 
 //-----------------------------------------------------------------------------------------

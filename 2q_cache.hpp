@@ -20,13 +20,13 @@
 namespace cache {
 
 template <typename T, typename KeyT = int>
-class two_q_cache_t : public cache_t<T, KeyT> {
-    private:
+class two_q_cache_t {
+    public:
         size_t hot_size;
         size_t a1_in_size;
         size_t a1_out_size;
-        cache_t<T, KeyT> lru_hot;
-        // cache_t<T, KeyT> a1_in;
+        cache_t<T, KeyT> lru_hot {hot_size};
+        cache_t<T, KeyT> a1_in   {a1_in_size};
         //std::queue<std::pair<KeyT, T>> a1_out;
     public:
         //Constructor & distructor
@@ -42,13 +42,5 @@ class two_q_cache_t : public cache_t<T, KeyT> {
 }
 
 //-----------------------------------------------------------------------------------------
-
-// inline int int_get_page (int key) {return key; };
-// int cache_test ();
-// int skip_wrong_input ();
-// int get_init_data (size_t* cache_size, size_t* count_of_elem, std::istream & is = std::cin);
-// int get_test_data (int* hits, const size_t count_of_elem, cache::cache_t<int>& lru,
-//                                                           std::istream & is = std::cin);
-// int ger_test_data ();
 
 #endif
