@@ -25,8 +25,6 @@ class cache_t {
         size_t size;
         std::list<std::pair<KeyT, T>> cache;
         std::unordered_map<KeyT, list_iterat> hash;
-        //std::queue<std::pair<KeyT, T>> a1_in;
-        //std::queue<std::pair<KeyT, T>> a1_out;
     public:
         //Constructor & distructor
         explicit cache_t (size_t size_ = 0);
