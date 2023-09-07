@@ -20,7 +20,8 @@
 namespace cache {
 
 template <typename T, typename KeyT = int>
-class two_q_cache_t {
+class two_q_cache_t { //TODO: legacy from cache_t
+    using list_iterat = typename std::list<std::pair<KeyT, T>>::iterator;
     public:
         size_t hot_size;
         size_t a1_in_size;
@@ -35,7 +36,12 @@ class two_q_cache_t {
         //Inline methods
         //Others methods
         template <typename F>
-        bool check_update (KeyT key, F get_page);
+        bool check_update    (KeyT key, F get_page);
+        template <typename F>
+        int  add_to_a1_in    (KeyT key, F get_page);
+        int  get_from_a1_out (KeyT key, list_iterat elem);
+        int  move_to_head_in_hot_lru (list_iterat elem);
+        int  move_from_a1_in_to_out ();
 };
 #include "./2q_cache.tpp"
 }

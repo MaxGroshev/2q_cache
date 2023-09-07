@@ -32,6 +32,10 @@ int get_init_data (size_t* cache_size, size_t* count_of_elem, std::istream & is)
             std::cout << "\nWrong input of init values\n";
             continue;
         }
+        if (*cache_size < 5) {
+            std::cout << "Impossible to use my cache with size less then 5\n";
+            continue;
+        }
         correct_input = true;
     }
     std::cout << *cache_size << ' ' << *count_of_elem << std::endl;
