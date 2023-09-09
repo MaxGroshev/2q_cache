@@ -1,4 +1,4 @@
-TARGET  = cache
+TARGET  = lru
 CC      = g++
 CFLAGS  = -Wshadow    							\
 		   -std=c++17							\
@@ -39,8 +39,8 @@ CFLAGS  = -Wshadow    							\
 		   -D_DEBUG 							\
 		   -D_EJUDGE_CLIENT_SIDE
 
-OBJ_DIR = ./obj
-
+OBJ_DIR   = ./cache/obj/
+CACHE_DIR = ./cache/
 DEBUG_DIR = ./debug_utils/
 
 ##################################################################################################################
@@ -51,12 +51,15 @@ OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(SRC))
 #Debug
 DEBUG_SRC = $(wildcard $(DEBUG_DIR)*.cpp)
 DEBUG_OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(DEBUG_SRC))
+#Cache
+CACHE_SRC = $(wildcard $(CACHE_DIR)*.cpp)
+CACHE_OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(CACHE_SRC))
 
 ##################################BACK_AND_FRONT####################################################################
 
 all: $(TARGET)
-$(TARGET):  $(OBJ) $(DEBUG_OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(DEBUG_OBJ)
+$(TARGET):  $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
 
 $(OBJ_DIR)%.o : %.cpp
 	$(CC) $(CFLAGS) $< -o $@

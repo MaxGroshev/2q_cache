@@ -50,7 +50,7 @@ int two_q_cache_t<T, KeyT>::get_from_a1_out (KeyT key, list_iter elem) {
         lru_hot.hash.erase (lru_hot.cache.back().first);
         lru_hot.cache.pop_back ();
     }
-    lru_hot.cache.splice (lru_hot.cache.begin (), a1_out.cache, elem); //end of rewriting
+    lru_hot.cache.splice (lru_hot.cache.begin (), a1_out.cache, elem);
     a1_out.hash.erase    (lru_hot.cache.front().first);
     lru_hot.hash.emplace (key, lru_hot.cache.begin ());
     return 0;
@@ -98,12 +98,12 @@ int two_q_cache_t<T, KeyT>::move_to_head_in_hot_lru (list_iter elem) {
 template <typename T, typename KeyT>
 int two_q_cache_t<T, KeyT>::dump_cache (const char* name_of_log_file) {
     using std::endl;
+
     std::ofstream dump_file;
     dump_file.open (name_of_log_file/*, std::ios_base::app*/);
     ASSERT (dump_file.is_open ());
 
     dump (dump_file);
-
     dump_file.close ();
     return 0;
 }

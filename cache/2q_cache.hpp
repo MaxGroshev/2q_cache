@@ -13,7 +13,7 @@
 #include <unordered_map>
 
 #include "./lru_cache.hpp"
-#include "./debug_utils/error_control.h"
+#include "../debug_utils/error_control.h"
 
 //-----------------------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ class two_q_cache_t {
         int  get_from_a1_out (KeyT key, list_iter elem);
         int  move_to_head_in_hot_lru (list_iter elem);
         int  move_from_a1_in_to_out  ();
-        int  dump_cache (const char* name_of_log_file = "./logs_output/cache_dump.txt");
+        int  dump_cache (const char* name_of_log_file = "../logs_output/cache_dump.txt");
 };
 #include "./2q_cache.tpp"
 }
