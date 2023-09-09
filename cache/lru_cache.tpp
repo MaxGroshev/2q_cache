@@ -39,6 +39,25 @@ bool cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
 }
 
 template <typename T, typename KeyT>
+T* cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
+                                       std::istream & in_strm) const {
+    LOG_DEBUG ("Getting of data for cache\n");
+
+    T* data = (T*) malloc (count_of_elem * sizeof (T*));
+    ASSERT (!is_nullptr (data));
+
+    for (size_t i = 0; i < count_of_elem; i++) {
+        in_strm >> data[i];
+        if (!in_strm.good ()) {
+            std::cout << "\nWrong input of values\n";
+            print_error_message (CUR_POS_IN_PROG);
+            exit (-1);
+        }
+    }
+    return data;
+}
+
+template <typename T, typename KeyT>
 int cache_t<T, KeyT>::dump (std::ofstream & os) {
     ASSERT (os.good ());
     auto cur_node = cache.begin ();

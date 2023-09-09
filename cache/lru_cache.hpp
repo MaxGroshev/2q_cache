@@ -8,7 +8,6 @@
 #include <string>
 #include <cstdlib>
 #include <list>
-#include <queue>
 #include <iterator>
 #include <unordered_map>
 
@@ -34,8 +33,9 @@ class cache_t {
         inline bool   is_full   () const { return (cache.size () == size);};
         inline size_t size_of   () const { return size;};
         inline bool   is_cached (hash_iter hit) const { return (hit != hash.end ());};
-        //inline hash_iter find_hash (KeyT key) const {return hash.find (key);};
         //Others methods
+        T* get_user_data (const size_t count_of_elem,
+                          std::istream & in_strm = std::cin) const;
         template <typename F>
         bool check_update (KeyT key, F get_page);
         int  dump (std::ofstream & os = std::cout);

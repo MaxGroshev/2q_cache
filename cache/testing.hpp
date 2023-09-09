@@ -21,9 +21,11 @@
 inline int int_get_page (int key) {return key; };
 int cache_test ();
 int skip_wrong_input ();
-int get_init_data (size_t* cache_size, size_t* count_of_elem, std::istream & is = std::cin);
+
+
+int get_init_data (size_t* cache_size, size_t* count_of_elem, std::istream & in_strm = std::cin);
 int get_test_data (int* hits, const size_t count_of_elem, cache::cache_t<int>& lru,
-                                                          std::istream & is = std::cin);
+                                                          std::istream & in_strm = std::cin);
 int ger_test_data ();
 
 #endif
