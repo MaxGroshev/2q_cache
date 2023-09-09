@@ -9,6 +9,7 @@
 #include <string>
 #include <cstdlib>
 #include "ASSERT.h"
+#include "./logs_define.h"
 
 //-----------------------------------------------------------------------------------------
 
@@ -27,5 +28,8 @@
 int   is_nullptr (const void* ptr);
 char* timestamp  ();
 int   print_error_message (const char* file_, const char* func_, int line_);
+template <class... Args>
+int write_logs (Args... log_text);
+#include "./logs.tpp"
 
 #endif
