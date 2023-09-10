@@ -42,8 +42,9 @@ CFLAGS  = -Wshadow    							\
 OBJ_DIR   = ./cache/obj/
 CACHE_DIR = ./cache/
 DEBUG_DIR = ./debug_utils/
+TESTS_DIR = ./tests/
 
-##################################################################################################################
+###################################################################################################
 
 #SRC
 SRC = $(wildcard *.cpp)
@@ -51,20 +52,23 @@ OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(SRC))
 #Debug
 DEBUG_SRC = $(wildcard $(DEBUG_DIR)*.cpp)
 DEBUG_OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(DEBUG_SRC))
+#Tests
+TESTS_SRC = $(wildcard $(TESTS_DIR)*.cpp)
+TESTS_OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(TESTS_SRC))
 #Cache
 CACHE_SRC = $(wildcard $(CACHE_DIR)*.cpp)
 CACHE_OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(CACHE_SRC))
 
-##################################BACK_AND_FRONT####################################################################
+###################################################################################################
 
 all: $(TARGET)
-$(TARGET):  $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
+$(TARGET):  $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
 
 $(OBJ_DIR)%.o : %.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
-################################PHONIES################################################################################
+################################PHONIES############################################################
 
 .PHONY: valgrind
 valgrind:

@@ -119,4 +119,15 @@ int two_q_cache_t<T, KeyT>::dump_to_strm (std::ofstream & os) {
     return 0;
 }
 
+template <typename T, typename KeyT>
+int two_q_cache_t<T, KeyT>::test_data (const size_t count_of_elem, T* data) {
+    ASSERT (!is_nullptr (data));
+    LOG_DEBUG ("Testing of 2q cache\n");
+    int hits = 0;
+    for (size_t i = 0; i < count_of_elem; i++) {
+        if (check_update (data[i], int_get_page)) hits++;
+    }
+    return hits;
+}
+
 #endif

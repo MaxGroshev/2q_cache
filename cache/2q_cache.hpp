@@ -46,6 +46,8 @@ class two_q_cache_t {
         int  move_to_head_in_hot_lru (list_iter elem);
         int  move_from_a1_in_to_out  ();
         int  dump_to_file (const char* name_of_log_file = "../logs_output/cache_dump.txt");
+        //Data test methid
+        int  test_data (const size_t count_of_elem, T* data);
 };
 #include "./2q_cache.tpp"
 }

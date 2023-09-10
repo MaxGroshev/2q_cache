@@ -44,7 +44,7 @@ int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
     if (not_soon_access_page->second == key) return 0;
     lru_object::hash.erase (not_soon_access_page->first);
     lru_object::cache.erase (not_soon_access_page);
-    LOG_DEBUG ("Removed from perf_lru: ", not_soon_access_page->second, '\n');
+   // LOG_DEBUG ("Removed from perf_lru: ", not_soon_access_page->second, '\n');
     return 0;
 }
 
@@ -54,11 +54,13 @@ auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
     auto not_soon_access_page = cur_node;
     auto hashed_page = data_hash.find (cur_node->first);
     while (cur_node != lru_object::cache.end ()) {
-        if ((hashed_page != data_hash.end ()) &&
+        if ((hashed_page == data_hash.end ()) ||
             (data_hash[key].begin() == data_hash[key].end ())) {
-            if (hashed_page->second.front () > data_hash[not_soon_access_page->first].front ()) {
-                not_soon_access_page = cur_node;
-            }
+            return cur_node;
+        }
+        else if (hashed_page->second.front () > data_hash[not_soon_access_page->first].front ()) {
+            std::cout << hashed_page->second.front () << std::endl;
+            not_soon_access_page = cur_node;
         }
         cur_node    = std::next (cur_node);
         hashed_page = data_hash.find (cur_node->first);
@@ -93,7 +95,7 @@ T* perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
         };
         data_hash[data[i]].push_back (i);
     }
-    dump_data_hash ();
+    //dump_data_hash ();
     return data;
 }
 
@@ -106,7 +108,21 @@ int perf_lru_t<T, KeyT>::dump_data_hash () {
         }
         std::cout << std::endl;
     }
+    std::cout << std::endl;
     return 0;
+}
+
+//Testing_of_data==========================================================================
+
+template <typename T, typename KeyT>
+int perf_lru_t<T, KeyT>::test_data (const size_t count_of_elem, T* data) {
+    ASSERT (!is_nullptr (data));
+    LOG_DEBUG ("Testing of perf_lru cache\n");
+    int hits = 0;
+    for (size_t i = 0; i < count_of_elem; i++) {
+        if (perf_lru_t::check_update (data[i], int_get_page)) hits++;
+    }
+    return hits;
 }
 
 #endif

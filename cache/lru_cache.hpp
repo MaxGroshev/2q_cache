@@ -46,6 +46,8 @@ class cache_t {
 #include "./lru_cache.tpp"
 }
 
+inline int int_get_page (int key) {return key; };
+
 //-----------------------------------------------------------------------------------------
 
 #endif

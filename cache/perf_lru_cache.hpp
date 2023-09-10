@@ -31,12 +31,14 @@ class perf_lru_t : public cache_t <T, KeyT> {
         virtual ~perf_lru_t ();
         //Others methods
         template <typename F>
-        bool      check_update (KeyT key, F get_page);
-        int       update_data_hash (KeyT key);
-        int       pop_not_soon_access  (KeyT key);
-        auto      find_not_soon_access (KeyT key) -> list_iter;
-        T*        get_user_data  (const size_t count_of_elem, std::istream & in_strm);
-        int       dump_data_hash ();
+        bool check_update (KeyT key, F get_page);
+        int  update_data_hash (KeyT key);
+        int  pop_not_soon_access  (KeyT key);
+        auto find_not_soon_access (KeyT key) -> list_iter;
+        T*   get_user_data  (const size_t count_of_elem, std::istream & in_strm);
+        int  dump_data_hash ();
+        //Test method
+        int  test_data (const size_t count_of_elem, T* data);
 };
 #include "./perf_lru_cache.tpp"
 }
