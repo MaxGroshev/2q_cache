@@ -96,26 +96,26 @@ int two_q_cache_t<T, KeyT>::move_to_head_in_hot_lru (list_iter elem) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-int two_q_cache_t<T, KeyT>::dump_cache (const char* name_of_log_file) {
+int two_q_cache_t<T, KeyT>::dump_to_file (const char* name_of_log_file) {
     using std::endl;
 
     std::ofstream dump_file;
-    dump_file.open (name_of_log_file/*, std::ios_base::app*/);
+    dump_file.open (name_of_log_file);
     ASSERT (dump_file.is_open ());
 
-    dump (dump_file);
+    dump_to_strm (dump_file);
     dump_file.close ();
     return 0;
 }
 
 template <typename T, typename KeyT>
-int two_q_cache_t<T, KeyT>::dump (std::ofstream & os) {
+int two_q_cache_t<T, KeyT>::dump_to_strm (std::ofstream & os) {
     os << "lru_hot:\n";
-    lru_hot.dump (os);
+    lru_hot.dump_to_strm (os);
     os << "a1_in:\n";
-    a1_in.dump (os);
+    a1_in.dump_to_strm (os);
     os << "a1_out:\n";
-    a1_out.dump (os);
+    a1_out.dump_to_strm (os);
     return 0;
 }
 

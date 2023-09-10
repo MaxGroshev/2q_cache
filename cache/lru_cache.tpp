@@ -42,7 +42,6 @@ template <typename T, typename KeyT>
 T* cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
                                        std::istream & in_strm) const {
     LOG_DEBUG ("Getting of data for cache\n");
-
     T* data = (T*) malloc (count_of_elem * sizeof (T*));
     ASSERT (!is_nullptr (data));
 
@@ -57,8 +56,23 @@ T* cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
     return data;
 }
 
+//-----------------------------------------------------------------------------------------
+
 template <typename T, typename KeyT>
-int cache_t<T, KeyT>::dump (std::ofstream & os) {
+int cache_t<T, KeyT>::dump_to_file (const char* name_of_log_file) {
+    using std::endl;
+
+    std::ofstream dump_file;
+    dump_file.open (name_of_log_file);
+    ASSERT (dump_file.is_open ());
+
+    dump_to_strm (dump_file);
+    dump_file.close ();
+    return 0;
+}
+
+template <typename T, typename KeyT>
+int cache_t<T, KeyT>::dump_to_strm (std::ostream & os) {
     ASSERT (os.good ());
     auto cur_node = cache.begin ();
     for (size_t i = 0; cur_node != cache.end (); i++) {

@@ -38,7 +38,10 @@ class cache_t {
                           std::istream & in_strm = std::cin) const;
         template <typename F>
         bool check_update (KeyT key, F get_page);
-        int  dump (std::ofstream & os = std::cout);
+        int  dump_to_file (const char* name_of_log_file =
+                           "./logs_output/perf_lru_dump.txt");
+        int  dump_to_strm (std::ostream & os = std::cout);
+
 };
 #include "./lru_cache.tpp"
 }

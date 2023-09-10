@@ -11,10 +11,10 @@ int cache_test () {
 	ASSERT (input_file.is_open ());
 
     get_init_data (&cache_size, &count_of_elem, input_file);
-    cache::cache_t<int> lru {cache_size};
-    int* data = lru.get_user_data (count_of_elem); //bad: only int*
-    int hits = 0;
-    //lru.dump_cache ();
+    cache::perf_lru_t<int> lru {cache_size};
+    auto user_data = lru.get_user_data (count_of_elem, input_file); //bad: only int*
+    int hits = test_user_data (count_of_elem, lru, user_data);
+    lru.dump_to_file ();
     input_file.close ();
 
     LOG_DEBUG ("Num of hits: "); std::cout << hits << std::endl;
@@ -39,20 +39,14 @@ int get_init_data (size_t* cache_size, size_t* count_of_elem, std::istream & in_
     return 0;
 }
 
-// int get_test_data (int* hits, const size_t count_of_elem, cache::cache_t<int>& lru,
-//                                                           std::istream & in_strm) {
-//     int val  = 0;
-//     for (size_t i = 0; i < count_of_elem; i++) {
-//         in_strm >> val;
-//         if (!in_strm.good ()) {
-//             std::cout << "\nWrong input of values\n";
-//             print_error_message (CUR_POS_IN_PROG);
-//             return -1;
-//         }
-//         if (lru.cache_t::check_update (val, int_get_page)) (*hits)++;
-//     }
-//     return *hits; //pointer and ret_value at the same time
-// }
+int test_user_data (const size_t count_of_elem, cache::perf_lru_t<int>& lru, T* data) {
+    ASSERT (!is_nullptr (data));
+    int hits = 0;
+    for (size_t i = 0; i < count_of_elem; i++) {
+        if (lru.perf_lru_t::check_update (data[i], int_get_page)) hits++;
+    }
+    return hits;
+}
 
 int skip_wrong_input () {
     std::cin.clear ();
