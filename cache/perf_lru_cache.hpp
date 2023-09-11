@@ -29,6 +29,7 @@ class perf_lru_t : public cache_t <T, KeyT> {
         //Constructor & distructor
         explicit perf_lru_t (size_t size_ = 0);
         virtual ~perf_lru_t ();
+
         //Others methods
         template <typename F>
         bool check_update (KeyT key, F get_page);
@@ -37,6 +38,7 @@ class perf_lru_t : public cache_t <T, KeyT> {
         auto find_not_soon_access (KeyT key) -> list_iter;
         T*   get_user_data  (const size_t count_of_elem, std::istream & in_strm = std::cin);
         int  dump_data_hash ();
+
         //Test method
         int  test_data (const size_t count_of_elem, T* data);
 };

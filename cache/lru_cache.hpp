@@ -43,7 +43,6 @@ class cache_t {
         int  dump_to_file (const char* name_of_log_file =
                            "./logs_output/perf_lru_dump.txt");
         int  dump_to_strm (std::ostream & os = std::cout);
-
 };
 }
 #include "./lru_cache.tpp"

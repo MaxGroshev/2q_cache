@@ -44,7 +44,7 @@ class two_q_cache_t {
         int  add_to_a1_in    (KeyT key, F get_page);
         int  move_from_a1_out_to_hot_lru  (KeyT key, list_iter elem);
         int  move_to_front_of_hot_lru (list_iter elem);
-        int  move_from_a1_in_to_out  ();
+        int  move_from_a1_in_to_out   ();
         int  dump_to_file  (const char* name_of_log_file = "../logs_output/cache_dump.txt");
         T*   get_user_data (const size_t count_of_elem, std::istream & in_strm = std::cin);
 
