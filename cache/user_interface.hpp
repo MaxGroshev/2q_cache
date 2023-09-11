@@ -4,13 +4,7 @@
 //-----------------------------------------------------------------------------------------
 
 #include <iostream>
-#include <cstring>
-#include <string>
 #include <cstdlib>
-#include <list>
-#include <queue>
-#include <iterator>
-#include <unordered_map>
 
 #include "./perf_lru_cache.hpp"
 #include "./2q_cache.hpp"

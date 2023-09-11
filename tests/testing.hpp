@@ -3,12 +3,13 @@
 
 //-----------------------------------------------------------------------------------------
 
+#define TESTING
+
 #include <iostream>
 #include <cstring>
 #include <string>
 #include <cstdlib>
 #include <list>
-#include <queue>
 #include <iterator>
 #include <unordered_map>
 
@@ -17,9 +18,15 @@
 #include "../cache/2q_cache.hpp"
 #include "../debug_utils/error_control.h"
 
+const int count_of_perf_lru_tests = 5;
+const int count_of_2_q_tests      = 5;
+
 //-----------------------------------------------------------------------------------------
 
-int cache_test ();
-
+int cache_test      ();
+int test_perf_lru   ();
+int test_two_q      ();
+int get_correct_res (std::istream & in_strm);
+int show_test_res   (int num_of_test, int hits, int correct_res);
 
 #endif

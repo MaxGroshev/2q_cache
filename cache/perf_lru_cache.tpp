@@ -1,6 +1,8 @@
 #ifndef PERF_LRU_CACHE_TPP
 #define PERF_LRU_CACHE_TPP
 
+namespace cache {
+
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
@@ -42,9 +44,11 @@ template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
     auto not_soon_access_page = find_not_soon_access (key);
     if (not_soon_access_page->second == key) return 0;
+
     lru_object::hash.erase (not_soon_access_page->first);
     lru_object::cache.erase (not_soon_access_page);
-   // LOG_DEBUG ("Removed from perf_lru: ", not_soon_access_page->second, '\n');
+
+    LOG_DEBUG ("Removed from perf_lru: ", not_soon_access_page->second, '\n');
     return 0;
 }
 
@@ -53,13 +57,13 @@ auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
     auto cur_node = lru_object::cache.begin ();
     auto not_soon_access_page = cur_node;
     auto hashed_page = data_hash.find (cur_node->first);
+
     while (cur_node != lru_object::cache.end ()) {
         if ((hashed_page == data_hash.end ()) ||
             (data_hash[key].begin() == data_hash[key].end ())) {
             return cur_node;
         }
         else if (hashed_page->second.front () > data_hash[not_soon_access_page->first].front ()) {
-            std::cout << hashed_page->second.front () << std::endl;
             not_soon_access_page = cur_node;
         }
         cur_node    = std::next (cur_node);
@@ -71,7 +75,7 @@ auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::update_data_hash (KeyT key) {
     data_hash[key].pop_front ();
-    if ((data_hash[key].begin() == data_hash[key].end ())) {
+    if (data_hash[key].begin() == data_hash[key].end ()) {
         data_hash.erase (key);
     }
     return 0;
@@ -86,6 +90,7 @@ T* perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
 
     T* data = (T*) malloc (count_of_elem * sizeof (T*));
     ASSERT (!is_nullptr (data));
+
     for (size_t i = 0; i < count_of_elem; i++) {
         in_strm >> data[i];
         if (!in_strm.good ()) {
@@ -116,13 +121,15 @@ int perf_lru_t<T, KeyT>::dump_data_hash () {
 
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::test_data (const size_t count_of_elem, T* data) {
-    ASSERT (!is_nullptr (data));
     LOG_DEBUG ("Testing of perf_lru cache\n");
+
+    ASSERT (!is_nullptr (data));
+
     int hits = 0;
     for (size_t i = 0; i < count_of_elem; i++) {
         if (perf_lru_t::check_update (data[i], int_get_page)) hits++;
     }
     return hits;
 }
-
+}
 #endif

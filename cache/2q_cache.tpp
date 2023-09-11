@@ -1,6 +1,8 @@
 #ifndef TWO_Q_CACHE_TPP
 #define TWO_Q_CACHE_TPP
 
+namespace cache {
+
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
@@ -29,7 +31,7 @@ bool two_q_cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
         if (!a1_in.is_cached (hit)) {
             hit = a1_out.hash.find (key);
             if (a1_out.is_cached (hit)) {
-                get_from_a1_out (key, hit->second);
+                move_from_a1_out_to_hot_lru  (key, hit->second);
                 return true;
             }
             add_to_a1_in (key, get_page);
@@ -37,15 +39,37 @@ bool two_q_cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
         }
         return true;
     }
-    move_to_head_in_hot_lru (hit->second);
+    move_to_front_of_hot_lru (hit->second);
     return true;
 }
 
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-int two_q_cache_t<T, KeyT>::get_from_a1_out (KeyT key, list_iter elem) {
+T* two_q_cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
+                                          std::istream & in_strm) {
+    LOG_DEBUG ("Getting of data for cache\n");
+
+    T* data = (T*) malloc (count_of_elem * sizeof (T));
+    ASSERT (!is_nullptr (data));
+
+    for (size_t i = 0; i < count_of_elem; i++) {
+        in_strm >> data[i];
+        if (!in_strm.good ()) {
+            std::cout << "\nWrong input of values\n";
+            print_error_message (CUR_POS_IN_PROG);
+            exit (-1);
+        };
+    }
+    return data;
+}
+
+//-----------------------------------------------------------------------------------------
+
+template <typename T, typename KeyT>
+int two_q_cache_t<T, KeyT>::move_from_a1_out_to_hot_lru  (KeyT key, list_iter elem) {
     LOG_DEBUG ("In a1_out\n");
+
     if (lru_hot.is_full ()) {
         lru_hot.hash.erase (lru_hot.cache.back().first);
         lru_hot.cache.pop_back ();
@@ -59,10 +83,12 @@ int two_q_cache_t<T, KeyT>::get_from_a1_out (KeyT key, list_iter elem) {
 template <typename T, typename KeyT>
 template <typename F>
 int two_q_cache_t<T, KeyT>::add_to_a1_in (KeyT key, F get_page) {
+    LOG_DEBUG ("Inserting in a1_in\n");
+
     if (a1_in.is_full ()) {
         move_from_a1_in_to_out ();
     }
-    LOG_DEBUG ("Inserting in a1_in\n");
+
     a1_in.cache.emplace_front (key, get_page (key));
     a1_in.hash.emplace        (key, a1_in.cache.begin ());
 
@@ -71,11 +97,13 @@ int two_q_cache_t<T, KeyT>::add_to_a1_in (KeyT key, F get_page) {
 
 template <typename T, typename KeyT>
 int two_q_cache_t<T, KeyT>::move_from_a1_in_to_out () {
+    LOG_DEBUG ("Pop from a1_in to a1_out\n");
+
     if (a1_out.is_full ()) {
         a1_out.hash.erase (a1_out.cache.back().first);
         a1_out.cache.pop_back ();
     }
-    LOG_DEBUG ("Pop from a1_in to a1_out\n");
+
     auto elem = a1_in.cache.back ();
     a1_in.cache.pop_back ();
     a1_out.cache.push_front (elem);
@@ -86,7 +114,7 @@ int two_q_cache_t<T, KeyT>::move_from_a1_in_to_out () {
 }
 
 template <typename T, typename KeyT>
-int two_q_cache_t<T, KeyT>::move_to_head_in_hot_lru (list_iter elem) {
+int two_q_cache_t<T, KeyT>::move_to_front_of_hot_lru (list_iter elem) {
     if (elem != lru_hot.cache.begin ()) {
         lru_hot.cache.splice (lru_hot.cache.begin (), lru_hot.cache, elem);
     }
@@ -121,13 +149,15 @@ int two_q_cache_t<T, KeyT>::dump_to_strm (std::ofstream & os) {
 
 template <typename T, typename KeyT>
 int two_q_cache_t<T, KeyT>::test_data (const size_t count_of_elem, T* data) {
-    ASSERT (!is_nullptr (data));
     LOG_DEBUG ("Testing of 2q cache\n");
+
+    ASSERT (!is_nullptr (data));
+
     int hits = 0;
     for (size_t i = 0; i < count_of_elem; i++) {
         if (check_update (data[i], int_get_page)) hits++;
     }
     return hits;
 }
-
+}
 #endif

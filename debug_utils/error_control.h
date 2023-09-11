@@ -1,7 +1,7 @@
 #ifndef ERROR_CONTR_H
 #define ERROR_CONTR_H
 
-#define DEBUG
+//#define DEBUG
 
 #include <iostream>
 #include <fstream>
@@ -29,7 +29,8 @@ int   is_nullptr (const void* ptr);
 char* timestamp  ();
 int   print_error_message (const char* file_, const char* func_, int line_);
 template <class... Args>
-int write_logs (Args... log_text);
+int   write_logs (Args... log_text);
+
 #include "./logs.tpp"
 
 #endif

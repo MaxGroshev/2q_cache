@@ -1,6 +1,8 @@
 #ifndef LRU_CACHE_TPP
 #define LRU_CACHE_TPP
 
+namespace cache {
+
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
@@ -28,21 +30,22 @@ bool cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
         }
         cache.emplace_front (key, get_page (key));
         hash.emplace        (key, cache.begin ());
-
         return false;
     }
+
     auto elem = hit->second;
     if (elem != cache.begin ()) {
-        cache.splice (cache.begin (), cache, elem /*std::next (elem)*/);
+        cache.splice (cache.begin (), cache, elem);
     }
     return true;
 }
 
 template <typename T, typename KeyT>
 T* cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
-                                       std::istream & in_strm) const {
+                                    std::istream & in_strm) const {
     LOG_DEBUG ("Getting of data for cache\n");
-    T* data = (T*) malloc (count_of_elem * sizeof (T*));
+
+    T* data = (T*) malloc (count_of_elem * sizeof (T));
     ASSERT (!is_nullptr (data));
 
     for (size_t i = 0; i < count_of_elem; i++) {
@@ -74,6 +77,7 @@ int cache_t<T, KeyT>::dump_to_file (const char* name_of_log_file) {
 template <typename T, typename KeyT>
 int cache_t<T, KeyT>::dump_to_strm (std::ostream & os) {
     ASSERT (os.good ());
+
     auto cur_node = cache.begin ();
     for (size_t i = 0; cur_node != cache.end (); i++) {
         os << "[" << i << "] key: " << cur_node->first << " , val: "
@@ -82,5 +86,5 @@ int cache_t<T, KeyT>::dump_to_strm (std::ostream & os) {
     }
     return 0;
 }
-
+}
 #endif
