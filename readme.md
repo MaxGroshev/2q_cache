@@ -4,7 +4,7 @@
     - perfect cache
 
 
-# Install and run?
+# Install and run
 ```
 > git clone https://github.com/MaxGroshev/2q_cache.git
 > make
@@ -19,22 +19,18 @@
 ```
 ---
 
-#### How to choose mode ?
-- run 2 queue cache:
+#### How to choose cache for teacher testing?
+- go to main.cpp choose one of two functions
+    - run_two_q_cache (); - for 2q cache
+    - run_perf_cache ();  - for perfect cache
+---
+
+#### How to run optimized compilation
 ```
-> make
-> ./lru -2q
-```
-- run perfect cache;
-```
-> make
-> ./lru -pc
-```
-- if no key is selected, one of the caches will be run
-```
-> make
+> make optimized
 > ./lru
 ```
+- You are able to change optimization flag in  /makefile
 ---
 
 #### How to run debug mode

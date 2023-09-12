@@ -9,7 +9,7 @@ template <typename T, typename KeyT>
 two_q_cache_t<T, KeyT>::two_q_cache_t (size_t size_) : a1_in_size (size_ / 4),
 hot_lru_size (size_ / 4), a1_out_size (size_- a1_in_size - hot_lru_size) {
     if (size_ < least_size_of_cache) { //how to call constr of cache after check os size?
-        std::cout << "Impossible to use my cache with size less then: " ;
+        std::cout << "Impossible to use 2q cache with size less then: " ;
         std::cout << least_size_of_cache << std::endl;
         exit (-1);
     }
