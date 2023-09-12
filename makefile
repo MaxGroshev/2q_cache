@@ -8,9 +8,9 @@ CFLAGS  = -Wshadow -std=c++17 -Winit-self -Wredundant-decls -Wcast-align        
 		  -Wlogical-op -Wmissing-field-initializers -Wnon-virtual-dtor			  \
 		  -Woverloaded-virtual -Wpointer-arith -Wsign-promo					      \
 		  -Wstack-usage=8192  -Wstrict-aliasing -Wstrict-null-sentinel  		  \
-		  -Wtype-limits -Wwrite-strings -D_DEBUG -D_EJUDGE_CLIENT_SIDE            \
+		  -Wtype-limits -Wwrite-strings -D_DEBUG                                  \
 
-OPTIMIZATION_FLAF = -o2-DNGEBUG
+OPTIMIZATION_FLAGS = -O2 -DNDEBUG
 
 
 OBJ_DIR   = ./cache/obj/
@@ -40,7 +40,7 @@ $(TARGET):  $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
 
 optimized: $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
-	$(CC) $(OPTIMIZATION_FLAF) $(CFLAGS) -o $(TARGET) $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
+	$(CC) $(OPTIMIZATION_FLAGS) $(CFLAGS) -o $(TARGET) $(OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
 
 $(OBJ_DIR)%.o : %.cpp
 	$(CC) $(CFLAGS) $< -o $@
