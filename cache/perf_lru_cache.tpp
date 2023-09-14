@@ -42,10 +42,13 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
 
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
+    if (data_hash.find(key)->second.size () == 1) {
+        return 0;
+    }
     auto not_soon_access_page = find_not_soon_access (key);
     if (not_soon_access_page->second == key) return 0;
 
-    lru_object::hash.erase (not_soon_access_page->first);
+    lru_object::hash.erase  (not_soon_access_page->first);
     lru_object::cache.erase (not_soon_access_page);
 
     LOG_DEBUG ("Removed from perf_lru: ", not_soon_access_page->second, '\n');
