@@ -4,36 +4,42 @@
     - perfect cache
 
 
-# Install and run
+# Install and run?
 ```
 > git clone https://github.com/MaxGroshev/2q_cache.git
 > make
-> ./lru
+> ./2q
 ```
 ---
 
-#### How to run my tests
+#### How to run 2q cache?
 ```
-> make
-> ./lru -tc
+> make 2q
+> ./2q
 ```
 ---
 
-#### How to choose cache for teacher testing?
-- go to main.cpp choose one of two functions
-    - run_two_q_cache (); - for 2q cache
-    - run_perf_cache ();  - for perfect cache
+#### How to run perfect cache?
+```
+> make perf_lru
+> ./perf_lru
+```
 ---
 
-#### How to run optimized compilation
+#### How to run my tests?
 ```
-> make optimized
-> ./lru
+> make tests
+> ./my_tests
 ```
-- You are able to change optimization flag in  /makefile
 ---
 
-#### How to run debug mode
+#### How to remove optimizations for compiler?
+- go to makefile
+- remove OPTIMIZATIONS FLAGS
+
+---
+
+#### How to run debug mode?
 - go to /debug_utils/error_control.h
 - #define DEBUG
 

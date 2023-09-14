@@ -11,8 +11,9 @@
 #include <iterator>
 #include <unordered_map>
 
-#include "./lru_cache.hpp"
-#include "../debug_utils/error_control.h"
+#include "../user_interface.hpp"
+#include "../lru_cache.hpp"
+#include "../../debug_utils/error_control.h"
 
 //-----------------------------------------------------------------------------------------
 
