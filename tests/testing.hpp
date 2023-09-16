@@ -18,7 +18,7 @@
 #include "../cache/2q_cache/2q_cache.hpp"
 #include "../debug_utils/error_control.h"
 
-const int count_of_perf_lru_tests = 5;
+const int count_of_perf_lru_tests = 7;
 const int count_of_2_q_tests      = 5;
 
 //-----------------------------------------------------------------------------------------

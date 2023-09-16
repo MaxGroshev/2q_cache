@@ -4,7 +4,7 @@
     - perfect cache
 
 
-# Install and run?
+# Install and run
 ```
 > git clone https://github.com/MaxGroshev/2q_cache.git
 > make

@@ -23,18 +23,24 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
     auto hit = lru_object::hash.find (key);
     if (hit == lru_object::hash.end ()) {
         if (lru_object::is_full ()) {
-            pop_not_soon_access (key);
+            int pop_type = pop_not_soon_access (key);
+            if (pop_type == POPED_RECEIVED) {
+                update_data_hash (key);
+                return false;
+            }
         }
         lru_object::cache.emplace_front (key, get_page (key));
         lru_object::hash.emplace        (key, lru_object::cache.begin ());
         update_data_hash (key);
         return false;
     }
+
     auto elem = hit->second;
     if (elem != lru_object::cache.begin ()) {
         lru_object::cache.splice (lru_object::cache.begin (), lru_object::cache, elem);
         update_data_hash (key);
     }
+
     return true;
 }
 
@@ -43,22 +49,25 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
     if (data_hash.find(key)->second.size () == 1) {
-        return 0;
+        return POPED_NOTHING;
     }
-    auto not_soon_access_page = find_not_soon_access (key);
-    if (not_soon_access_page->second == key) return 0;
 
-    lru_object::hash.erase  (not_soon_access_page->first);
-    lru_object::cache.erase (not_soon_access_page);
+    auto latest_access_page = find_not_soon_access (key);
+    if (recieved_found_later_then_cached (latest_access_page, key)) {
+        return POPED_RECEIVED;
+    }
 
-    LOG_DEBUG ("Removed from perf_lru: ", not_soon_access_page->second, '\n');
-    return 0;
+    lru_object::hash.erase  (latest_access_page->first);
+    lru_object::cache.erase (latest_access_page);
+
+    LOG_DEBUG ("Removed from perf_lru: ", latest_access_page->second, '\n');
+    return POPED_FROM_CACHE;
 }
 
 template <typename T, typename KeyT>
 auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
     auto cur_node = lru_object::cache.begin ();
-    auto not_soon_access_page = cur_node;
+    auto latest_access_page = cur_node;
     auto hashed_page = data_hash.find (cur_node->first);
 
     while (cur_node != lru_object::cache.end ()) {
@@ -66,13 +75,14 @@ auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
             (data_hash[key].begin() == data_hash[key].end ())) {
             return cur_node;
         }
-        else if (hashed_page->second.front () > data_hash[not_soon_access_page->first].front ()) {
-            not_soon_access_page = cur_node;
+        else if (hashed_page->second.front () >
+                                        data_hash[latest_access_page->first].front ()) {
+            latest_access_page = cur_node;
         }
         cur_node    = std::next (cur_node);
         hashed_page = data_hash.find (cur_node->first);
     }
-    return not_soon_access_page;
+    return latest_access_page;
 }
 
 template <typename T, typename KeyT>
@@ -89,7 +99,7 @@ int perf_lru_t<T, KeyT>::update_data_hash (KeyT key) {
 template <typename T, typename KeyT>
 T* perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
                                        std::istream & in_strm) {
-    LOG_DEBUG ("Getting of data for cache\n");
+    LOG_DEBUG ("Get data for cache\n");
 
     T* data = (T*) malloc (count_of_elem * sizeof (T*));
     ASSERT (!is_nullptr (data));

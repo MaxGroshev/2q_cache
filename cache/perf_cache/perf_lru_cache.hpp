@@ -19,6 +19,12 @@
 
 namespace cache {
 
+enum type_of_pop_t {
+    POPED_NOTHING    = -2,
+    POPED_RECEIVED   = -1,
+    POPED_FROM_CACHE = 0,
+};
+
 template <typename T, typename KeyT = int>
 class perf_lru_t : public cache_t <T, KeyT> {
     using list_iter  = typename std::list<std::pair<KeyT, T>>::iterator;
@@ -42,6 +48,11 @@ class perf_lru_t : public cache_t <T, KeyT> {
 
         //Test method
         int  test_data (const size_t count_of_elem, T* data);
+
+        inline int recieved_found_later_then_cached (list_iter latest_access_page, KeyT key) {
+            return (data_hash[latest_access_page->first].front () <=
+                                       *(std::next(data_hash.find(key)->second.begin())));
+        };
 };
 }
 #include "./perf_lru_cache.tpp"
