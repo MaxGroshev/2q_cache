@@ -21,19 +21,16 @@ template <typename T, typename KeyT>
 template <typename F>
 bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
     auto hit = lru_object::hash.find (key);
-    std::cout << "Key: " << key << '\n';
-    perf_lru_t::dump_to_strm ();
-    std::cout << "\n\n";
 
     if (hit == lru_object::hash.end ()) {
-        if (data_occur_hash.find(key)->second.size () == 1) {
-            std::cout << "Delete never meet again: " << key << '\n';
+        if (!data_will_occur_again (key)) {
             update_data_occur_hash (key);
             return false;
         }
-        if (lru_object::is_full ()) {
+
+        else if (lru_object::is_full ()) {
             int pop_type = pop_not_soon_access (key);
-            if (pop_type == POPED_RECEIVED || pop_type == POPED_NOTHING) {
+            if (pop_type == POPED_RECEIVED) {
                 update_data_occur_hash (key);
                 return false;
             }
@@ -47,10 +44,8 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
     auto elem = hit->second;
     if (elem != lru_object::cache.begin ()) {
         lru_object::cache.splice (lru_object::cache.begin (), lru_object::cache, elem);
-
     }
     update_data_occur_hash (key);
-    std::cout << "Hit: " << key << '\n';
     return true;
 }
 
@@ -58,14 +53,8 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
 
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
-    // if (data_occur_hash.find(key)->second.size () == 1) {
-    //     std::cout << "oh NO" << key << '\n';
-    //     return POPED_NOTHING;
-    // }
-
     auto latest_access_page = find_not_soon_access (key);
     if (recieved_found_later_then_cached (latest_access_page, key)) {
-        std::cout << "About rec\n";
         return POPED_RECEIVED;
     }
 
@@ -85,7 +74,6 @@ auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
     while (cur_node != lru_object::cache.end ()) {
         if ((hashed_page == data_occur_hash.end ()) ||
             (data_occur_hash[key].begin() == data_occur_hash[key].end ())) {
-            std::cout << "I am here\n";
             return cur_node;
         }
         else if (hashed_page->second.front () >

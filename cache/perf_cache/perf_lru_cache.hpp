@@ -45,14 +45,14 @@ class perf_lru_t : public cache_t <T, KeyT> {
         auto find_not_soon_access (KeyT key) -> list_iter;
         T*   get_user_data  (const size_t count_of_elem, std::istream & in_strm = std::cin);
         int  dump_data_occur_hash ();
-        inline int recieved_found_later_then_cached (list_iter latest_access_page, KeyT key) {
-            std::cout << "Key: " << key << '\n';
-            dump_data_occur_hash ();
-            std::cout << '\n';
-            std::cout << data_occur_hash[latest_access_page->first].front () << " : " <<
-            *(std::next(data_occur_hash.find(key)->second.begin())) << '\n';
+
+        bool data_will_occur_again (KeyT key) const {
+            return !(data_occur_hash.find(key)->second.size () == 1);
+        };
+
+        int recieved_found_later_then_cached (list_iter latest_access_page, KeyT key) {
             return (data_occur_hash[latest_access_page->first].front () <=
-                                       *(std::next(data_occur_hash.find(key)->second.begin())));
+                                *(std::next(data_occur_hash.find(key)->second.begin())));
         };
         //Test method
         int  test_data (const size_t count_of_elem, T* data);
