@@ -26,7 +26,7 @@ class cache_t {
         std::list<std::pair<KeyT, T>> cache;
         std::unordered_map<KeyT, list_iter> hash;
     public:
-        //Constructor & distructor
+        //Constructor & destructor
         explicit cache_t (size_t size_ = 0);
         virtual ~cache_t ();
 

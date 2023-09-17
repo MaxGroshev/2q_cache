@@ -31,7 +31,7 @@ class perf_lru_t : public cache_t <T, KeyT> {
     using hash_iter  = typename std::unordered_map<KeyT, list_iter>::iterator;
     using lru_object = cache_t <T, KeyT>;
     private:
-        std::unordered_map<T, std::list<size_t>> data_hash;
+        std::unordered_map<T, std::list<size_t>> data_occur_hash;
     public:
         //Constructor & distructor
         explicit perf_lru_t (size_t size_ = 0);
@@ -40,19 +40,24 @@ class perf_lru_t : public cache_t <T, KeyT> {
         //Others methods
         template <typename F>
         bool check_update (KeyT key, F get_page);
-        int  update_data_hash (KeyT key);
+        int  update_data_occur_hash (KeyT key);
         int  pop_not_soon_access  (KeyT key);
         auto find_not_soon_access (KeyT key) -> list_iter;
         T*   get_user_data  (const size_t count_of_elem, std::istream & in_strm = std::cin);
-        int  dump_data_hash ();
-
+        int  dump_data_occur_hash ();
+        inline int recieved_found_later_then_cached (list_iter latest_access_page, KeyT key) {
+            std::cout << "Key: " << key << '\n';
+            dump_data_occur_hash ();
+            std::cout << '\n';
+            std::cout << data_occur_hash[latest_access_page->first].front () << " : " <<
+            *(std::next(data_occur_hash.find(key)->second.begin())) << '\n';
+            return (data_occur_hash[latest_access_page->first].front () <=
+                                       *(std::next(data_occur_hash.find(key)->second.begin())));
+        };
         //Test method
         int  test_data (const size_t count_of_elem, T* data);
 
-        inline int recieved_found_later_then_cached (list_iter latest_access_page, KeyT key) {
-            return (data_hash[latest_access_page->first].front () <=
-                                       *(std::next(data_hash.find(key)->second.begin())));
-        };
+
 };
 }
 #include "./perf_lru_cache.tpp"

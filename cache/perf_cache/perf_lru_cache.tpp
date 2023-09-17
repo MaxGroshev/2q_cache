@@ -21,26 +21,36 @@ template <typename T, typename KeyT>
 template <typename F>
 bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
     auto hit = lru_object::hash.find (key);
+    std::cout << "Key: " << key << '\n';
+    perf_lru_t::dump_to_strm ();
+    std::cout << "\n\n";
+
     if (hit == lru_object::hash.end ()) {
+        if (data_occur_hash.find(key)->second.size () == 1) {
+            std::cout << "Delete never meet again: " << key << '\n';
+            update_data_occur_hash (key);
+            return false;
+        }
         if (lru_object::is_full ()) {
             int pop_type = pop_not_soon_access (key);
-            if (pop_type == POPED_RECEIVED) {
-                update_data_hash (key);
+            if (pop_type == POPED_RECEIVED || pop_type == POPED_NOTHING) {
+                update_data_occur_hash (key);
                 return false;
             }
         }
         lru_object::cache.emplace_front (key, get_page (key));
         lru_object::hash.emplace        (key, lru_object::cache.begin ());
-        update_data_hash (key);
+        update_data_occur_hash (key);
         return false;
     }
 
     auto elem = hit->second;
     if (elem != lru_object::cache.begin ()) {
         lru_object::cache.splice (lru_object::cache.begin (), lru_object::cache, elem);
-        update_data_hash (key);
-    }
 
+    }
+    update_data_occur_hash (key);
+    std::cout << "Hit: " << key << '\n';
     return true;
 }
 
@@ -48,12 +58,14 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
 
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
-    if (data_hash.find(key)->second.size () == 1) {
-        return POPED_NOTHING;
-    }
+    // if (data_occur_hash.find(key)->second.size () == 1) {
+    //     std::cout << "oh NO" << key << '\n';
+    //     return POPED_NOTHING;
+    // }
 
     auto latest_access_page = find_not_soon_access (key);
     if (recieved_found_later_then_cached (latest_access_page, key)) {
+        std::cout << "About rec\n";
         return POPED_RECEIVED;
     }
 
@@ -68,28 +80,29 @@ template <typename T, typename KeyT>
 auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
     auto cur_node = lru_object::cache.begin ();
     auto latest_access_page = cur_node;
-    auto hashed_page = data_hash.find (cur_node->first);
+    auto hashed_page = data_occur_hash.find (cur_node->first);
 
     while (cur_node != lru_object::cache.end ()) {
-        if ((hashed_page == data_hash.end ()) ||
-            (data_hash[key].begin() == data_hash[key].end ())) {
+        if ((hashed_page == data_occur_hash.end ()) ||
+            (data_occur_hash[key].begin() == data_occur_hash[key].end ())) {
+            std::cout << "I am here\n";
             return cur_node;
         }
         else if (hashed_page->second.front () >
-                                        data_hash[latest_access_page->first].front ()) {
+                                        data_occur_hash[latest_access_page->first].front ()) {
             latest_access_page = cur_node;
         }
         cur_node    = std::next (cur_node);
-        hashed_page = data_hash.find (cur_node->first);
+        hashed_page = data_occur_hash.find (cur_node->first);
     }
     return latest_access_page;
 }
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::update_data_hash (KeyT key) {
-    data_hash[key].pop_front ();
-    if (data_hash[key].begin() == data_hash[key].end ()) {
-        data_hash.erase (key);
+int perf_lru_t<T, KeyT>::update_data_occur_hash (KeyT key) {
+    data_occur_hash[key].pop_front ();
+    if (data_occur_hash[key].begin() == data_occur_hash[key].end ()) {
+        data_occur_hash.erase (key);
     }
     return 0;
 }
@@ -111,15 +124,15 @@ T* perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
             print_error_message (CUR_POS_IN_PROG);
             exit (-1);
         };
-        data_hash[data[i]].push_back (i);
+        data_occur_hash[data[i]].push_back (i);
     }
-    //dump_data_hash ();
+    //dump_data_occur_hash ();
     return data;
 }
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::dump_data_hash () {
-    for (auto map_itr = data_hash.begin (); map_itr != data_hash.end (); map_itr++) {
+int perf_lru_t<T, KeyT>::dump_data_occur_hash () {
+    for (auto map_itr = data_occur_hash.begin (); map_itr != data_occur_hash.end (); map_itr++) {
         std::cout << "Key [" << map_itr->first << ']' << ": ";
         for(auto l_itr = map_itr->second.begin (); l_itr != map_itr->second.end (); l_itr++) {
             std::cout<< *l_itr <<", ";
