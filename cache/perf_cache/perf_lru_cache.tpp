@@ -29,7 +29,7 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
         }
 
         else if (lru_object::is_full ()) {
-            int pop_type = pop_not_soon_access (key);
+            int pop_type = pop_farthest (key);
             if (pop_type == POPED_RECEIVED) {
                 update_data_occur_hash (key);
                 return false;
@@ -52,8 +52,8 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
-    auto latest_access_page = find_not_soon_access (key);
+int perf_lru_t<T, KeyT>::pop_farthest (KeyT key) {
+    auto latest_access_page = find_farthest (key);
     if (recieved_found_later_then_cached (latest_access_page, key)) {
         return POPED_RECEIVED;
     }
@@ -66,7 +66,7 @@ int perf_lru_t<T, KeyT>::pop_not_soon_access (KeyT key) {
 }
 
 template <typename T, typename KeyT>
-auto perf_lru_t<T, KeyT>::find_not_soon_access (KeyT key) -> list_iter {
+auto perf_lru_t<T, KeyT>::find_farthest (KeyT key) -> list_iter {
     auto cur_node = lru_object::cache.begin ();
     auto latest_access_page = cur_node;
     auto hashed_page = data_occur_hash.find (cur_node->first);

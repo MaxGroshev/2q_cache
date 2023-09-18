@@ -41,8 +41,8 @@ class perf_lru_t : public cache_t <T, KeyT> {
         template <typename F>
         bool check_update (KeyT key, F get_page);
         int  update_data_occur_hash (KeyT key);
-        int  pop_not_soon_access  (KeyT key);
-        auto find_not_soon_access (KeyT key) -> list_iter;
+        int  pop_farthest  (KeyT key);
+        auto find_farthest (KeyT key) -> list_iter;
         T*   get_user_data  (const size_t count_of_elem, std::istream & in_strm = std::cin);
         int  dump_data_occur_hash ();
 
@@ -50,11 +50,13 @@ class perf_lru_t : public cache_t <T, KeyT> {
             return !(data_occur_hash.find(key)->second.size () == 1);
         };
 
+        //Check that next meeting of received elem is later than next meeting of
+        //cached elem
         int recieved_found_later_then_cached (list_iter latest_access_page, KeyT key) {
             return (data_occur_hash[latest_access_page->first].front () <=
                                 *(std::next(data_occur_hash.find(key)->second.begin())));
         };
-        //Test method
+        //Testing method
         int  test_data (const size_t count_of_elem, T* data);
 
 

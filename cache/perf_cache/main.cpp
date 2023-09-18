@@ -9,6 +9,7 @@ int main () {
 
     auto user_data = lru.get_user_data (count_of_elem);
     if (is_nullptr (user_data)) return -1;
+
     int hits       = lru.test_data     (count_of_elem, user_data);
     std::cout << hits << std::endl;
     free (user_data);

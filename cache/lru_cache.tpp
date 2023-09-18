@@ -87,4 +87,5 @@ int cache_t<T, KeyT>::dump_to_strm (std::ostream & os) {
     return 0;
 }
 }
+
 #endif

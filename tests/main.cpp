@@ -13,9 +13,10 @@ int test_perf_lru () {
     input_file.open ("./tests/test_data/test_perf_lru.txt");
 	ASSERT (input_file.is_open ());
 
-    int    hits = 0;
+    int    hits          = 0;
     size_t cache_size    = 0;
     size_t count_of_elem = 0;
+
     std::cerr << "-----------------PERF_LRU_TESTS--------------------\n";
     for (int num_of_test = 1; num_of_test <= count_of_perf_lru_tests; num_of_test++) {
         {

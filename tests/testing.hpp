@@ -3,8 +3,6 @@
 
 //-----------------------------------------------------------------------------------------
 
-#define TESTING
-
 #include <iostream>
 #include <cstring>
 #include <string>

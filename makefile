@@ -25,7 +25,7 @@ OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(SRC))
 #Perf_lru
 PERF_LRU_SRC = $(wildcard $(PERF_LRU_DIR)*.cpp)
 PERF_LRU_OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(PERF_LRU_SRC))
-#Debug
+#DEBUG
 DEBUG_SRC = $(wildcard $(DEBUG_DIR)*.cpp)
 DEBUG_OBJ = $(patsubst $(OBJ_DIR)%.cpp, %.o, $(DEBUG_SRC))
 #Tests
