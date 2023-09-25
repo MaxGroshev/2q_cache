@@ -23,8 +23,8 @@ two_q_cache_t<T, KeyT>::~two_q_cache_t () {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-template <typename F>
-bool two_q_cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
+bool two_q_cache_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
+
     auto hit = lru_hot.hash.find (key);
     if (!lru_hot.is_cached (hit)) {
         hit = a1_in.hash.find (key);
@@ -46,15 +46,15 @@ bool two_q_cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-T* two_q_cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
-                                          std::istream & in_strm) {
+std::vector<T> two_q_cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
+                                                      std::istream & in_strm) {
     LOG_DEBUG ("Getting of data for cache\n");
 
-    T* data = (T*) malloc (count_of_elem * sizeof (T));
-    ASSERT (!is_nullptr (data));
-
+    std::vector<T> data;
+    T val;
     for (size_t i = 0; i < count_of_elem; i++) {
-        in_strm >> data[i];
+        in_strm >> val;
+        data.push_back(val);
         if (!in_strm.good ()) {
             std::cout << "\nWrong input of values\n";
             print_error_message (CUR_POS_IN_PROG);
@@ -68,6 +68,7 @@ T* two_q_cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
 
 template <typename T, typename KeyT>
 int two_q_cache_t<T, KeyT>::move_from_a1_out_to_hot_lru  (KeyT key, list_iter elem) {
+    ASSERT(elem != cache.end())
     LOG_DEBUG ("In a1_out\n");
 
     if (lru_hot.is_full ()) {
@@ -81,8 +82,7 @@ int two_q_cache_t<T, KeyT>::move_from_a1_out_to_hot_lru  (KeyT key, list_iter el
 }
 
 template <typename T, typename KeyT>
-template <typename F>
-int two_q_cache_t<T, KeyT>::add_to_a1_in (KeyT key, F get_page) {
+int two_q_cache_t<T, KeyT>::add_to_a1_in (KeyT key, int(*get_page)(int)) {
     LOG_DEBUG ("Inserting in a1_in\n");
 
     if (a1_in.is_full ()) {
@@ -115,6 +115,7 @@ int two_q_cache_t<T, KeyT>::move_from_a1_in_to_out () {
 
 template <typename T, typename KeyT>
 int two_q_cache_t<T, KeyT>::move_to_front_of_hot_lru (list_iter elem) {
+    ASSERT(elem != cache.end())
     if (elem != lru_hot.cache.begin ()) {
         lru_hot.cache.splice (lru_hot.cache.begin (), lru_hot.cache, elem);
     }
@@ -148,10 +149,8 @@ int two_q_cache_t<T, KeyT>::dump_to_strm (std::ofstream & os) {
 }
 
 template <typename T, typename KeyT>
-int two_q_cache_t<T, KeyT>::test_data (const size_t count_of_elem, T* data) {
+int two_q_cache_t<T, KeyT>::test_data (const size_t count_of_elem, std::vector<T> data) {
     LOG_DEBUG ("Testing of 2q cache\n");
-
-    ASSERT (!is_nullptr (data));
 
     int hits = 0;
     for (size_t i = 0; i < count_of_elem; i++) {

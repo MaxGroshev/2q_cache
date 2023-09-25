@@ -28,7 +28,6 @@ int test_perf_lru () {
             hits = lru.test_data (count_of_elem, user_data);
 
             show_test_res (num_of_test, hits, correct_res);
-            free (user_data);
         }
     }
     input_file.close ();
@@ -54,7 +53,6 @@ int test_two_q () { //repeating of the previos code, but impossible to change in
             hits = lru.test_data (count_of_elem, user_data);
 
             show_test_res (num_of_test, hits, correct_res);
-            free (user_data);
         }
     }
     input_file.close ();

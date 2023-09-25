@@ -18,8 +18,7 @@ perf_lru_t<T, KeyT>::~perf_lru_t () {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-template <typename F>
-bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
+bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
     auto hit = lru_object::hash.find (key);
 
     if (hit == lru_object::hash.end ()) {
@@ -53,7 +52,9 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, F get_page) {
 
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::pop_farthest (KeyT key) {
-    auto latest_access_page = find_farthest (key);
+    list_iter latest_access_page = find_farthest (key);
+    ASSERT(latest_access_page != cache.end())
+
     if (recieved_found_later_then_cached (latest_access_page, key)) {
         return POPED_RECEIVED;
     }
@@ -67,21 +68,20 @@ int perf_lru_t<T, KeyT>::pop_farthest (KeyT key) {
 
 template <typename T, typename KeyT>
 auto perf_lru_t<T, KeyT>::find_farthest (KeyT key) -> list_iter {
-    auto cur_node = lru_object::cache.begin ();
-    auto latest_access_page = cur_node;
-    auto hashed_page = data_occur_hash.find (cur_node->first);
+    auto node = lru_object::cache.begin ();
+    auto latest_access_page = node;
+    auto hashed_page = data_occur_hash.find (node->first);
 
-    while (cur_node != lru_object::cache.end ()) {
-        if ((hashed_page == data_occur_hash.end ()) ||
-            (data_occur_hash[key].begin() == data_occur_hash[key].end ())) {
-            return cur_node;
+    for (;node != lru_object::cache.end (); node = std::next (node)) {
+        hashed_page = data_occur_hash.find (node->first);
+
+        if ((hashed_page == data_occur_hash.end ()) || data_occur_hash[key].empty()) {
+            return node;
         }
         else if (hashed_page->second.front () >
                                         data_occur_hash[latest_access_page->first].front ()) {
-            latest_access_page = cur_node;
+            latest_access_page = node;
         }
-        cur_node    = std::next (cur_node);
-        hashed_page = data_occur_hash.find (cur_node->first);
     }
     return latest_access_page;
 }
@@ -89,7 +89,7 @@ auto perf_lru_t<T, KeyT>::find_farthest (KeyT key) -> list_iter {
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::update_data_occur_hash (KeyT key) {
     data_occur_hash[key].pop_front ();
-    if (data_occur_hash[key].begin() == data_occur_hash[key].end ()) {
+    if (data_occur_hash[key].empty()) {
         data_occur_hash.erase (key);
     }
     return 0;
@@ -98,15 +98,15 @@ int perf_lru_t<T, KeyT>::update_data_occur_hash (KeyT key) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-T* perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
-                                       std::istream & in_strm) {
+std::vector<T> perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
+                                                   std::istream & in_strm) {
     LOG_DEBUG ("Get data for cache\n");
 
-    T* data = (T*) malloc (count_of_elem * sizeof (T*));
-    ASSERT (!is_nullptr (data));
-
+    std::vector<T> data;
+    T val;
     for (size_t i = 0; i < count_of_elem; i++) {
-        in_strm >> data[i];
+        in_strm >> val;
+        data.push_back(val);
         if (!in_strm.good ()) {
             std::cout << "\nWrong input of values\n";
             print_error_message (CUR_POS_IN_PROG);
@@ -134,10 +134,8 @@ int perf_lru_t<T, KeyT>::dump_data_occur_hash () {
 //Testing_of_data==========================================================================
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::test_data (const size_t count_of_elem, T* data) {
+int perf_lru_t<T, KeyT>::test_data (const size_t count_of_elem, std::vector<T> data) {
     LOG_DEBUG ("Testing of perf_lru cache\n");
-
-    ASSERT (!is_nullptr (data));
 
     int hits = 0;
     for (size_t i = 0; i < count_of_elem; i++) {

@@ -20,8 +20,7 @@ cache_t<T, KeyT>::~cache_t () {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-template <typename F>
-bool cache_t<T, KeyT>::check_update (KeyT key, F get_page) {
+bool cache_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
     auto hit = hash.find (key);
     if (hit == hash.end ()) {
         if (is_full ()) {

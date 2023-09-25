@@ -46,7 +46,7 @@ perf_lru: $(PERF_LRU_OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
 2q: $(2Q_OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) $(TESTS_OBJ)
 	$(CC) $(OPTIMIZATION_FLAGS) $(CFLAGS) -o $(T_2Q) $(2Q_OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
 
-tests: $(TESTS_OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
+tests: $(TESTS_OBJ) $(DEBUG_OBJ) $(CACHE_OBJ) 2q perf_lru
 	$(CC) $(OPTIMIZATION_FLAGS) $(CFLAGS) -o $(T_TESTS) $(TESTS_OBJ) $(DEBUG_OBJ) $(CACHE_OBJ)
 
 ################################PHONIES############################################################
