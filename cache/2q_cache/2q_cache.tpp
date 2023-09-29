@@ -67,8 +67,8 @@ std::vector<T> two_q_cache_t<T, KeyT>::get_user_data (const size_t count_of_elem
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-int two_q_cache_t<T, KeyT>::move_from_a1_out_to_hot_lru  (KeyT key, list_iter elem) {
-    ASSERT(elem != cache.end())
+int two_q_cache_t<T, KeyT>::move_from_a1_out_to_hot_lru (KeyT key, list_iter elem) {
+    ASSERT(elem != cache.end());
     LOG_DEBUG ("In a1_out\n");
 
     if (lru_hot.is_full ()) {
@@ -149,12 +149,12 @@ int two_q_cache_t<T, KeyT>::dump_to_strm (std::ofstream & os) {
 }
 
 template <typename T, typename KeyT>
-int two_q_cache_t<T, KeyT>::test_data (const size_t count_of_elem, std::vector<T> data) {
+int two_q_cache_t<T, KeyT>::test_data (std::vector<T> data) {
     LOG_DEBUG ("Testing of 2q cache\n");
 
     int hits = 0;
-    for (size_t i = 0; i < count_of_elem; i++) {
-        if (check_update (data[i], int_get_page)) hits++;
+    for (T& page : data) {
+        if (check_update (page, int_get_page)) hits++;
     }
     return hits;
 }

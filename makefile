@@ -3,7 +3,7 @@ T_2Q       = 2q
 T_PERF_LRU = perf_lru
 T_TESTS    = my_tests
 CC         = g++
-CFLAGS     = -Wshadow -std=c++17 -Wall
+CFLAGS     = -Wshadow -std=c++17
 
 OPTIMIZATION_FLAGS = -O2 -DNDEBUG
 
@@ -11,7 +11,7 @@ OBJ_DIR   = ./cache/obj/
 CACHE_DIR = ./cache/
 2Q_DIR    = ./cache/2q_cache/
 PERF_LRU_DIR = ./cache/perf_cache/
-DEBUG_DIR = ./debug_utils/
+DEBUG_DIR = ./debug_utils/error_control/
 TESTS_DIR = ./tests/
 
 ###################################################################################################

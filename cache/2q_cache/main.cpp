@@ -1,4 +1,3 @@
-//#include "./prog_for_testing_system.hpp"
 #include "./2q_cache.hpp"
 
 int main () {
@@ -10,7 +9,7 @@ int main () {
     cache::two_q_cache_t<int>lru {cache_size};
 
     auto user_data = lru.get_user_data (count_of_elem);
-    int hits       = lru.test_data     (count_of_elem, user_data);
+    int hits       = lru.test_data     (user_data);
     std::cout << hits << std::endl;
 
     return 0;

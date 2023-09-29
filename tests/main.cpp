@@ -17,6 +17,7 @@ int test_perf_lru () {
     size_t cache_size    = 0;
     size_t count_of_elem = 0;
 
+    //std::cout << time () / 10000;
     std::cerr << "-----------------PERF_LRU_TESTS--------------------\n";
     for (int num_of_test = 1; num_of_test <= count_of_perf_lru_tests; num_of_test++) {
         {
@@ -25,7 +26,7 @@ int test_perf_lru () {
 
             auto user_data   = lru.get_user_data (count_of_elem, input_file);
             int  correct_res = get_correct_res (input_file);
-            hits = lru.test_data (count_of_elem, user_data);
+            hits = lru.test_data (user_data);
 
             show_test_res (num_of_test, hits, correct_res);
         }
@@ -50,7 +51,7 @@ int test_two_q () { //repeating of the previos code, but impossible to change in
 
             auto user_data   = lru.get_user_data (count_of_elem, input_file);
             int  correct_res = get_correct_res (input_file);
-            hits = lru.test_data (count_of_elem, user_data);
+            hits = lru.test_data (user_data);
 
             show_test_res (num_of_test, hits, correct_res);
         }

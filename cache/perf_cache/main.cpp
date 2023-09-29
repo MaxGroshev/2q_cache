@@ -9,7 +9,7 @@ int main () {
 
     auto user_data = lru.get_user_data (count_of_elem);
 
-    int hits = lru.test_data (count_of_elem, user_data);
+    int hits = lru.test_data (user_data);
     std::cout << hits << std::endl;
 
     return 0;

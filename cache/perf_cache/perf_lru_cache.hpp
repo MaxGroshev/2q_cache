@@ -13,13 +13,12 @@
 
 #include "../user_interface.hpp"
 #include "../lru_cache.hpp"
-#include "../../debug_utils/error_control.h"
 
 //-----------------------------------------------------------------------------------------
 
 namespace cache {
 
-enum type_of_pop_t {
+enum class type_of_pop_t {
     POPED_NOTHING    = -2,
     POPED_RECEIVED   = -1,
     POPED_FROM_CACHE = 0,
@@ -41,7 +40,7 @@ class perf_lru_t : public cache_t <T, KeyT> {
         //Others methods
         bool check_update (KeyT key, int(*get_page)(int));
         int  update_data_occur_hash (KeyT key);
-        int  pop_farthest  (KeyT key);
+        type_of_pop_t  pop_farthest  (KeyT key);
         auto find_farthest (KeyT key) -> list_iter;
         std::vector<T> get_user_data (const size_t count_of_elem,
                                       std::istream & in_strm = std::cin);
@@ -59,7 +58,7 @@ class perf_lru_t : public cache_t <T, KeyT> {
                                 *(std::next(data_occur_hash.find(key)->second.begin())));
         };
         //Testing method
-        int  test_data (const size_t count_of_elem, std::vector<T> data);
+        int  test_data (std::vector<T> data);
 };
 }
 #include "./perf_lru_cache.tpp"

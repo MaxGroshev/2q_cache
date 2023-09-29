@@ -4,6 +4,7 @@
 
 int get_init_data (size_t* cache_size, size_t* count_of_elem, std::istream & in_strm) {
     ASSERT (!in_strm.eof ());
+
     bool correct_input = false;
     while (!correct_input) {
         in_strm >> *cache_size >> *count_of_elem;

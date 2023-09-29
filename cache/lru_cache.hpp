@@ -10,9 +10,11 @@
 #include <list>
 #include <iterator>
 #include <vector>
+#include <ranges>
 #include <unordered_map>
 
-#include "../debug_utils/error_control.h"
+#include "../debug_utils/debug_utils.hpp"
+//#include "../debug_utils/error_control/error_control.hpp"
 
 //-----------------------------------------------------------------------------------------
 
@@ -37,8 +39,8 @@ class cache_t {
         inline bool   is_cached (hash_iter hit) const { return (hit != hash.end ());};
 
         //Others methods
-        T*   get_user_data  (const size_t count_of_elem,
-                             std::istream & in_strm = std::cin) const;
+        std::vector<T> get_user_data  (const size_t count_of_elem,
+                                       std::istream & in_strm = std::cin) const;
         bool check_update (KeyT key, int(*get_page)(int));
         int  dump_to_file (const char* name_of_log_file);
         int  dump_to_strm (std::ostream & os = std::cout);

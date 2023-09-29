@@ -28,8 +28,8 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
         }
 
         else if (lru_object::is_full ()) {
-            int pop_type = pop_farthest (key);
-            if (pop_type == POPED_RECEIVED) {
+            type_of_pop_t pop_type = pop_farthest (key);
+            if (pop_type == type_of_pop_t::POPED_RECEIVED) {
                 update_data_occur_hash (key);
                 return false;
             }
@@ -51,19 +51,19 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::pop_farthest (KeyT key) {
+type_of_pop_t perf_lru_t<T, KeyT>::pop_farthest (KeyT key) {
     list_iter latest_access_page = find_farthest (key);
     ASSERT(latest_access_page != cache.end())
 
     if (recieved_found_later_then_cached (latest_access_page, key)) {
-        return POPED_RECEIVED;
+        return type_of_pop_t::POPED_RECEIVED;
     }
 
     lru_object::hash.erase  (latest_access_page->first);
     lru_object::cache.erase (latest_access_page);
 
     LOG_DEBUG ("Removed from perf_lru: ", latest_access_page->second, '\n');
-    return POPED_FROM_CACHE;
+    return type_of_pop_t::POPED_FROM_CACHE;
 }
 
 template <typename T, typename KeyT>
@@ -114,16 +114,18 @@ std::vector<T> perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
         };
         data_occur_hash[data[i]].push_back (i);
     }
-    //dump_data_occur_hash ();
+   // dump_data_occur_hash ();
     return data;
 }
 
 template <typename T, typename KeyT>
 int perf_lru_t<T, KeyT>::dump_data_occur_hash () {
-    for (auto map_itr = data_occur_hash.begin (); map_itr != data_occur_hash.end (); map_itr++) {
-        std::cout << "Key [" << map_itr->first << ']' << ": ";
-        for(auto l_itr = map_itr->second.begin (); l_itr != map_itr->second.end (); l_itr++) {
-            std::cout<< *l_itr <<", ";
+    std::cout << "Dump of occur data\n";
+
+    for (auto const& key : data_occur_hash) {
+        std::cout << "[" << key.first << "] : ";
+        for(auto const& occurs : key.second) {
+            std::cout<< occurs <<", ";
         }
         std::cout << std::endl;
     }
@@ -134,12 +136,12 @@ int perf_lru_t<T, KeyT>::dump_data_occur_hash () {
 //Testing_of_data==========================================================================
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::test_data (const size_t count_of_elem, std::vector<T> data) {
+int perf_lru_t<T, KeyT>::test_data (std::vector<T> data) {
     LOG_DEBUG ("Testing of perf_lru cache\n");
 
     int hits = 0;
-    for (size_t i = 0; i < count_of_elem; i++) {
-        if (perf_lru_t::check_update (data[i], int_get_page)) hits++;
+    for (T& page : data) {
+        if (perf_lru_t::check_update (page, int_get_page)) hits++;
     }
     return hits;
 }

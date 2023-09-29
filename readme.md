@@ -40,7 +40,7 @@
 ---
 
 #### How to run debug mode?
-- go to /debug_utils/error_control.h
+- go to /debug_utils/error_control.hpp
 - #define DEBUG
 
 
