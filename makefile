@@ -5,7 +5,7 @@ T_TESTS    = my_tests
 CC         = g++
 CFLAGS     = -Wshadow -std=c++17
 
-OPTIMIZATION_FLAGS = -O2 -DNDEBUG
+OPTIMIZATION_FLAGS = -O2 -DNDEBUG -fext-numeric-literals
 
 OBJ_DIR   = ./cache/obj/
 CACHE_DIR = ./cache/
