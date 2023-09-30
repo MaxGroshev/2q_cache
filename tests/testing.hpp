@@ -28,8 +28,9 @@ int test_two_q      ();
 int comp_perf_and_2q();
 int get_correct_res (std::istream & in_strm);
 int show_test_res   (int num_of_test, int hits, int correct_res, double test_time);
-int show_comp_res (int num_of_test, int perf_lru_hits, int two_q_hits,
-                   int perf_lru_correct_res, int two_q_correct_res,
-                   double perf_lru_time, double two_q_time);
+int show_comp_res   (int num_of_test, int perf_lru_hits, int two_q_hits,
+                     int perf_lru_correct_res, int two_q_correct_res,
+                     double perf_lru_time, double two_q_time, size_t cache_size,
+                     size_t count_of_elem);
 
 #endif

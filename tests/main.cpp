@@ -115,7 +115,8 @@ int comp_perf_and_2q () {
 
         show_comp_res (num_of_test, perf_lru_hits, two_q_hits,
                        perf_lru_correct_res, two_q_correct_res,
-                       perf_lru_time, two_q_time);
+                       perf_lru_time, two_q_time, cache_size,
+                       count_of_elem);
     }
 
     input_file.close ();
@@ -131,12 +132,13 @@ int get_correct_res (std::istream & in_strm) {
     return correct_res;
 }
 
-int show_comp_res (int num_of_test, int perf_lru_hits, int two_q_hits,
-                   int perf_lru_correct_res, int two_q_correct_res,
-                   double perf_lru_time, double two_q_time) {
+int show_comp_res   (int num_of_test, int perf_lru_hits, int two_q_hits,
+                     int perf_lru_correct_res, int two_q_correct_res,
+                     double perf_lru_time, double two_q_time, size_t cache_size,
+                     size_t count_of_elem) {
 
     using namespace time_control;
-
+    printf ("|----------------------------------------------------\n");
     if (perf_lru_hits == perf_lru_correct_res && two_q_hits == two_q_correct_res) {
         printf ("|%s Test %d IS PASSED:%s\n", GREEN_C, num_of_test, RESET_C);
     }
@@ -150,6 +152,8 @@ int show_comp_res (int num_of_test, int perf_lru_hits, int two_q_hits,
     }
     printf ("|Perf lru running tine: %lg microseconds\n", perf_lru_time);
     printf ("|2q running time:       %lg microseconds\n", two_q_time);
+    printf ("|Cache size   : %d\n", cache_size);
+    printf ("|Count_of_elem: %d\n", count_of_elem);
 
     return 0;
 }
