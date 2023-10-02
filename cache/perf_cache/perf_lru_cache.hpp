@@ -35,7 +35,6 @@ class perf_lru_t : public cache_t <T, KeyT> {
     public:
         //Constructor & distructor
         explicit perf_lru_t (size_t size_ = 0);
-        virtual ~perf_lru_t ();
 
         //Others methods
         bool check_update (KeyT key, int(*get_page)(int));

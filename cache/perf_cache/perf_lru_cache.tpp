@@ -7,12 +7,6 @@ namespace cache {
 
 template <typename T, typename KeyT>
 perf_lru_t<T, KeyT>::perf_lru_t (size_t size_) : cache_t<T, KeyT> (size_) {
-
-}
-
-template <typename T, typename KeyT>
-perf_lru_t<T, KeyT>::~perf_lru_t () {
-
 }
 
 //-----------------------------------------------------------------------------------------

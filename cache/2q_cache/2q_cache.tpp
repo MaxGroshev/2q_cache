@@ -15,11 +15,6 @@ hot_lru_size (size_ / 4), a1_out_size (size_- a1_in_size - hot_lru_size) {
     }
 }
 
-template <typename T, typename KeyT>
-two_q_cache_t<T, KeyT>::~two_q_cache_t () {
-
-}
-
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>

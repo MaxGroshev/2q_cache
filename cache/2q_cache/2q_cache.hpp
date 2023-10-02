@@ -35,7 +35,6 @@ class two_q_cache_t {
     public:
         //Constructor & distructor
         explicit two_q_cache_t (size_t size_);
-        virtual ~two_q_cache_t ();
 
         //Others methods
         bool check_update (KeyT key, int(*get_page)(int));
