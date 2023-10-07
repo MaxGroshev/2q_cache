@@ -1,5 +1,8 @@
 #include "./2q_cache.hpp"
 
+using namespace std::chrono;
+
+
 int main () {
 
     size_t cache_size    = 0;

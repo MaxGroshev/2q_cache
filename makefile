@@ -3,7 +3,7 @@ T_2Q       = 2q
 T_PERF_LRU = perf_lru
 T_TESTS    = my_tests
 CC         = g++
-CFLAGS     = -Wshadow -std=c++17
+CFLAGS     = -Wshadow -std=c++20
 
 OPTIMIZATION_FLAGS = -O2 -DNDEBUG -fext-numeric-literals
 

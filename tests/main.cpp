@@ -90,8 +90,8 @@ int comp_perf_and_2q () {
     int    perf_lru_correct_res = 0;
     int    two_q_correct_res    = 0;
 
-    chrono_time_type start_time;
-    chrono_time_type end_time;
+    std::chrono::high_resolution_clock::time_point start_time;
+    std::chrono::high_resolution_clock::time_point end_time;
 
     std::cout << "-----------------COMPARISON_TESTS--------------------\n";
     for (int num_of_test = 1; num_of_test <= count_of_comp_test; num_of_test++) {
@@ -101,16 +101,16 @@ int comp_perf_and_2q () {
         cache::two_q_cache_t<int> lru_2q {cache_size};
         auto user_data = perf_lru.get_user_data (count_of_elem, input_file);
 
-        start_time = chrono_cur_time ();
+        start_time = chrono_high_res_time ();
         perf_lru_correct_res = get_correct_res (input_file);
         perf_lru_hits = perf_lru.test_data (user_data);
-        end_time = chrono_cur_time ();
+        end_time = chrono_high_res_time ();
         double perf_lru_time = (end_time - start_time) / 0.001ms;
 
-        start_time = chrono_cur_time ();
+        start_time = chrono_high_res_time ();
         two_q_correct_res = get_correct_res (input_file);
         two_q_hits = lru_2q.test_data (user_data);
-        end_time = chrono_cur_time ();
+        end_time = chrono_high_res_time ();
         double two_q_time = (end_time - start_time) / 0.001ms;
 
         show_comp_res (num_of_test, perf_lru_hits, two_q_hits,
