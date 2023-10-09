@@ -7,42 +7,35 @@
 # Install and run
 ```
 > git clone https://github.com/MaxGroshev/2q_cache.git
-> make
-> ./2q
+> mkdir build
+> cd build
+> cmake ..
 ```
 ---
 
 #### How to run 2q cache?
 ```
-> make 2q
-> ./2q
+> cd build
+> make
+> ./cache/2q_cache
 ```
 ---
 
 #### How to run perfect cache?
 ```
-> make perf_lru
-> ./perf_lru
+> cd build
+> make
+> ./cache/perf_lru
 ```
 ---
 
 #### How to run my tests?
 ```
-> make tests
-> ./my_tests
+> cd build
+> make
+>  ./tests/e2e_tests
 ```
 ---
-
-#### How to remove optimizations for compiler?
-- go to makefile
-- remove OPTIMIZATIONS FLAGS
-
----
-
-#### How to run debug mode?
-- go to /debug_utils/error_control.hpp
-- #define DEBUG
-
 
 ---
 
