@@ -1,0 +1,9 @@
+/home/max/vladoc/lru_cache/build/CMakeFiles/edit_cache.dir
+/home/max/vladoc/lru_cache/build/CMakeFiles/rebuild_cache.dir
+/home/max/vladoc/lru_cache/build/cache/CMakeFiles/2q_cache.dir
+/home/max/vladoc/lru_cache/build/cache/CMakeFiles/perf_lru.dir
+/home/max/vladoc/lru_cache/build/cache/CMakeFiles/edit_cache.dir
+/home/max/vladoc/lru_cache/build/cache/CMakeFiles/rebuild_cache.dir
+/home/max/vladoc/lru_cache/build/tests/CMakeFiles/e2e_tests.dir
+/home/max/vladoc/lru_cache/build/tests/CMakeFiles/edit_cache.dir
+/home/max/vladoc/lru_cache/build/tests/CMakeFiles/rebuild_cache.dir

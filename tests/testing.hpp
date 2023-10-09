@@ -11,11 +11,11 @@
 #include <iterator>
 #include <unordered_map>
 
-#include "../cache/user_interface.hpp"
-#include "../cache/perf_cache/perf_lru_cache.hpp"
-#include "../cache/2q_cache/2q_cache.hpp"
-#include "../debug_utils/debug_utils.hpp"
-#include "../debug_utils/console_colors.hpp"
+#include "user_interface.hpp"
+#include "perf_lru_cache.hpp"
+#include "2q_cache.hpp"
+#include "debug_utils.hpp"
+#include "console_colors.hpp"
 
 const int count_of_perf_lru_tests = 7;
 const int count_of_2_q_tests      = 6;

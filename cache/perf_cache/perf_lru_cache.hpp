@@ -11,8 +11,9 @@
 #include <iterator>
 #include <unordered_map>
 
-#include "../user_interface.hpp"
-#include "../lru_cache.hpp"
+#include "ASSERT.hpp"
+#include "user_interface.hpp"
+#include "lru_cache.hpp"
 
 //-----------------------------------------------------------------------------------------
 
@@ -37,27 +38,30 @@ class perf_lru_t : public cache_t <T, KeyT> {
         explicit perf_lru_t (size_t size_ = 0);
 
         //Others methods
-        bool check_update (KeyT key, int(*get_page)(int));
-        int  update_data_occur_hash (KeyT key);
-        type_of_pop_t  pop_farthest  (KeyT key);
-        auto find_farthest (KeyT key) -> list_iter;
+        bool check_update (const KeyT key, int(*get_page)(int));
+        int  update_data_occur_hash  (const KeyT key) ;
+        type_of_pop_t  pop_farthest  (const KeyT key);
+        auto find_farthest (const KeyT key) -> list_iter;
         std::vector<T> get_user_data (const size_t count_of_elem,
                                       std::istream & in_strm = std::cin);
-        int  dump_data_occur_hash ();
+        int  dump_data_occur_hash () const;
 
-        bool data_will_occur_again (KeyT key) const {
+        bool data_will_occur_again (const KeyT key) const {
             return !(data_occur_hash.find(key)->second.size () == 1);
         };
+        int test_data (std::vector<T> data);
 
-        //Check that next meeting of received elem is later than next meeting of
-        //cached elem
-        int recieved_found_later_then_cached (list_iter latest_access_page, KeyT key) {
-            ASSERT(latest_access_page != cache.end());
-            return (data_occur_hash[latest_access_page->first].front () <=
-                                *(std::next(data_occur_hash.find(key)->second.begin())));
+        int recieved_found_later_then_cached (const KeyT key_of_cached,
+                                              const KeyT key_of_received) {
+            using namespace std;
+
+            list<size_t> list_with_occurs_received =
+                                            data_occur_hash.find(key_of_received)->second;
+            size_t occur_to_received = *(next(list_with_occurs_received.begin()));
+            size_t occur_to_cached   = data_occur_hash[key_of_cached].front();
+
+            return (occur_to_cached <= occur_to_received);
         };
-        //Testing method
-        int  test_data (std::vector<T> data);
 };
 }
 #include "./perf_lru_cache.tpp"

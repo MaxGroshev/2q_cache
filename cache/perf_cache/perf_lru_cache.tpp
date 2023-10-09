@@ -45,11 +45,11 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-type_of_pop_t perf_lru_t<T, KeyT>::pop_farthest (KeyT key) {
+type_of_pop_t perf_lru_t<T, KeyT>::pop_farthest (const KeyT key) {
     list_iter latest_access_page = find_farthest (key);
     ASSERT(latest_access_page != cache.end())
 
-    if (recieved_found_later_then_cached (latest_access_page, key)) {
+    if (recieved_found_later_then_cached (latest_access_page->first, key)) {
         return type_of_pop_t::POPED_RECEIVED;
     }
 
@@ -61,7 +61,7 @@ type_of_pop_t perf_lru_t<T, KeyT>::pop_farthest (KeyT key) {
 }
 
 template <typename T, typename KeyT>
-auto perf_lru_t<T, KeyT>::find_farthest (KeyT key) -> list_iter {
+auto perf_lru_t<T, KeyT>::find_farthest (const KeyT key) -> list_iter {
     auto node = lru_object::cache.begin ();
     auto latest_access_page = node;
     auto hashed_page = data_occur_hash.find (node->first);
@@ -81,7 +81,7 @@ auto perf_lru_t<T, KeyT>::find_farthest (KeyT key) -> list_iter {
 }
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::update_data_occur_hash (KeyT key) {
+int perf_lru_t<T, KeyT>::update_data_occur_hash (const KeyT key) {
     data_occur_hash[key].pop_front ();
     if (data_occur_hash[key].empty()) {
         data_occur_hash.erase (key);
@@ -113,7 +113,7 @@ std::vector<T> perf_lru_t<T, KeyT>::get_user_data (const size_t count_of_elem,
 }
 
 template <typename T, typename KeyT>
-int perf_lru_t<T, KeyT>::dump_data_occur_hash () {
+int perf_lru_t<T, KeyT>::dump_data_occur_hash () const {
     std::cout << "Dump of occur data\n";
 
     for (auto const& key : data_occur_hash) {

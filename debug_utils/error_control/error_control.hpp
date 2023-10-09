@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <chrono>
 
-#include "../console_colors.hpp"
+#include "console_colors.hpp"
 #include "ASSERT.hpp"
 
 //-----------------------------------------------------------------------------------------

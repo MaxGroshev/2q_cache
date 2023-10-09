@@ -14,7 +14,7 @@ int test_perf_lru () {
     using namespace time_control;
 
     std::ifstream input_file;
-    input_file.open ("./tests/test_data/test_perf_lru.txt");
+    input_file.open ("../tests/test_data/perf_lru_tests.txt");
 	ASSERT (input_file.is_open ());
 
     int    hits          = 0;
@@ -47,7 +47,7 @@ int test_two_q () { //repeating of the previos code, but impossible to change in
     using namespace time_control;
 
     std::ifstream input_file;
-    input_file.open ("./tests/test_data/two_q_tests.txt");
+    input_file.open ("../tests/test_data/two_q_tests.txt");
 	ASSERT (input_file.is_open ());
 
     int    hits = 0;
@@ -80,7 +80,7 @@ int comp_perf_and_2q () {
     using namespace time_control;
 
     std::ifstream input_file;
-    input_file.open ("./tests/test_data/comp_test.txt");
+    input_file.open ("../tests/test_data/comp_tests.txt");
 	ASSERT (input_file.is_open ());
 
     int    perf_lru_hits = 0;

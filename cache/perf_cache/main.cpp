@@ -1,4 +1,4 @@
-#include "./perf_lru_cache.hpp"
+#include "perf_lru_cache.hpp"
 
 int main () {
     size_t cache_size    = 0;

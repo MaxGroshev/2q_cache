@@ -6,8 +6,8 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "./perf_cache/perf_lru_cache.hpp"
-#include "./2q_cache/2q_cache.hpp"
+#include "perf_lru_cache.hpp"
+#include "2q_cache.hpp"
 
 //-----------------------------------------------------------------------------------------
 

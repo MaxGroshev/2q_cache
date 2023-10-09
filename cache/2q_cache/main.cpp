@@ -1,4 +1,4 @@
-#include "./2q_cache.hpp"
+#include "2q_cache.hpp"
 
 using namespace std::chrono;
 

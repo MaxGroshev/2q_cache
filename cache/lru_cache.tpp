@@ -61,20 +61,7 @@ std::vector<T> cache_t<T, KeyT>::get_user_data (const size_t count_of_elem,
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-int cache_t<T, KeyT>::dump_to_file (const char* name_of_log_file) {
-    using std::endl;
-
-    std::ofstream dump_file;
-    dump_file.open (name_of_log_file);
-    ASSERT (dump_file.is_open ());
-
-    dump_to_strm (dump_file);
-    dump_file.close ();
-    return 0;
-}
-
-template <typename T, typename KeyT>
-int cache_t<T, KeyT>::dump_to_strm (std::ostream & os) {
+int cache_t<T, KeyT>::dump_to_strm (std::ostream & os) const{
     ASSERT (os.good ());
 
     for (auto const& [key, value] : cache) {
