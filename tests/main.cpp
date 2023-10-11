@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------------------
 
 int main () {
-    // test_perf_lru ();
-    // test_two_q    ();
+    //test_perf_lru ();
+    //test_two_q    ();
     comp_perf_and_2q ();
     return 0;
 }
@@ -138,22 +138,17 @@ int show_comp_res   (int num_of_test, int perf_lru_hits, int two_q_hits,
                      size_t count_of_elem) {
 
     using namespace time_control;
-    printf ("|----------------------------------------------------\n");
+    std::cout << "|----------------------------------------------------\n";
     if (perf_lru_hits == perf_lru_correct_res && two_q_hits == two_q_correct_res) {
-        printf ("|%s Test %d IS PASSED:%s\n", GREEN_C, num_of_test, RESET_C);
+        std::cout << "|" << GREEN_C << "Test num_of_test IS PASSED: " << RESET_C << "\n";
     }
     else {
-        printf ("|%s Test %d IS FAILED:%s\n", RED_C, num_of_test, RESET_C);
-        printf ("%s [perf_lru_hits: %d; perf_lru_correct_res: %d]%s\n",
-        BLUE_C, perf_lru_hits, perf_lru_correct_res, RESET_C);
-        printf ("%s [two_q_hits: %d; two_q_correct_res: %d]%s\n",
-        BLUE_C, two_q_hits, two_q_correct_res, RESET_C);
-
+        std::cout << "|" << RED_C << "Test " << num_of_test  << "IS FAILED:" << RESET_C << "\n";
     }
-    printf ("|Perf lru running tine: %lg microseconds\n", perf_lru_time);
-    printf ("|2q running time:       %lg microseconds\n", two_q_time);
-    printf ("|Cache size   : %d\n", cache_size);
-    printf ("|Count_of_elem: %d\n", count_of_elem);
+    std::cout << "|Perf lru running tine:" << perf_lru_time << " microseconds\n";
+    std::cout << "|2q running time:      " << two_q_time << "microseconds\n";
+    std::cout << "|Cache size   :" << cache_size << "\n";
+    std::cout << "|Count_of_elem:" << count_of_elem << "\n";
 
     return 0;
 }
@@ -163,14 +158,14 @@ int show_test_res (int num_of_test, int hits, int correct_res, double test_time)
     using namespace time_control;
 
     if (hits == correct_res) {
-        printf ("|%s Test %d IS PASSED:%s", GREEN_C, num_of_test, RESET_C);
-        printf ("%s [hits: %d; correct res: %d]%s\n", BLUE_C, hits, correct_res, RESET_C);
+        std::cout << "|" << GREEN_C << "Test " <<  num_of_test << " IS PASSED: " << RESET_C << "\n";
+        std::cout << BLUE_C << "hits: " << hits << " correct res: " << RESET_C<<  "\n";
     }
     else {
-        printf ("|%s Test %d IS FAILED:%s", RED_C, num_of_test, RESET_C);
-        printf ("%s [hits: %d; correct res: %d]%s\n", BLUE_C, hits, correct_res, RESET_C);
+        std::cout << "|" << RED_C << "Test " << num_of_test  << "IS FAILED:" << RESET_C << "\n";
+        std::cout << BLUE_C << "hits: " << hits << " correct res: " << RESET_C<<  "\n";
     }
-    printf ("|Time of running: %lg microseconds\n", test_time);
+    std::cout << "|Time of running: " << test_time << "microseconds\n";
 
     return 0;
 }

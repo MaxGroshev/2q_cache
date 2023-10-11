@@ -22,11 +22,7 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
         }
 
         else if (lru_object::is_full ()) {
-            type_of_pop_t pop_type = pop_farthest (key);
-            if (pop_type == type_of_pop_t::POPED_RECEIVED) {
-                update_data_occur_hash (key);
-                return false;
-            }
+            pop_farthest ();
         }
         lru_object::cache.emplace_front (key, get_page (key));
         lru_object::hash.emplace        (key, lru_object::cache.begin ());
@@ -45,23 +41,21 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-type_of_pop_t perf_lru_t<T, KeyT>::pop_farthest (const KeyT key) {
-    list_iter latest_access_page = find_farthest (key);
+type_of_pop_t perf_lru_t<T, KeyT>::pop_farthest () {
+    list_iter latest_access_page = find_farthest ();
     ASSERT(latest_access_page != cache.end())
-
-    if (recieved_found_later_then_cached (latest_access_page->first, key)) {
-        return type_of_pop_t::POPED_RECEIVED;
-    }
 
     lru_object::hash.erase  (latest_access_page->first);
     lru_object::cache.erase (latest_access_page);
+
+
 
     LOG_DEBUG ("Removed from perf_lru: ", latest_access_page->second, '\n');
     return type_of_pop_t::POPED_FROM_CACHE;
 }
 
 template <typename T, typename KeyT>
-auto perf_lru_t<T, KeyT>::find_farthest (const KeyT key) -> list_iter {
+auto perf_lru_t<T, KeyT>::find_farthest () -> list_iter {
     auto node = lru_object::cache.begin ();
     auto latest_access_page = node;
     auto hashed_page = data_occur_hash.find (node->first);
@@ -69,10 +63,10 @@ auto perf_lru_t<T, KeyT>::find_farthest (const KeyT key) -> list_iter {
     for (;node != lru_object::cache.end (); node = std::next (node)) {
         hashed_page = data_occur_hash.find (node->first);
 
-        if ((hashed_page == data_occur_hash.end ()) || data_occur_hash[key].empty()) {
+        if ((hashed_page == data_occur_hash.end ())) {
             return node;
         }
-        else if (hashed_page->second.front () >
+        else if (hashed_page->second.front () >=
                                         data_occur_hash[latest_access_page->first].front ()) {
             latest_access_page = node;
         }

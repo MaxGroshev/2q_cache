@@ -40,8 +40,8 @@ class perf_lru_t : public cache_t <T, KeyT> {
         //Others methods
         bool check_update (const KeyT key, int(*get_page)(int));
         int  update_data_occur_hash  (const KeyT key) ;
-        type_of_pop_t  pop_farthest  (const KeyT key);
-        auto find_farthest (const KeyT key) -> list_iter;
+        type_of_pop_t  pop_farthest  ();
+        auto find_farthest () -> list_iter;
         std::vector<T> get_user_data (const size_t count_of_elem,
                                       std::istream & in_strm = std::cin);
         int  dump_data_occur_hash () const;
@@ -51,17 +51,7 @@ class perf_lru_t : public cache_t <T, KeyT> {
         };
         int test_data (std::vector<T> data);
 
-        int recieved_found_later_then_cached (const KeyT key_of_cached,
-                                              const KeyT key_of_received) {
-            using namespace std;
 
-            list<size_t> list_with_occurs_received =
-                                            data_occur_hash.find(key_of_received)->second;
-            size_t occur_to_received = *(next(list_with_occurs_received.begin()));
-            size_t occur_to_cached   = data_occur_hash[key_of_cached].front();
-
-            return (occur_to_cached <= occur_to_received);
-        };
 };
 }
 #include "./perf_lru_cache.tpp"
