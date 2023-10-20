@@ -6,33 +6,27 @@ namespace cache {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-perf_lru_t<T, KeyT>::perf_lru_t (size_t size_) : cache_t<T, KeyT> (size_) {
-}
-
-//-----------------------------------------------------------------------------------------
-
-template <typename T, typename KeyT>
 bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
-    auto hit = lru_object::hash.find (key);
+    auto hit = lru_cache.hash.find (key);
 
-    if (hit == lru_object::hash.end ()) {
+    if (hit == lru_cache.hash.end ()) {
         if (!data_will_occur_again (key)) {
             update_data_occur_hash (key);
             return false;
         }
 
-        else if (lru_object::is_full ()) {
+        else if (lru_cache.is_full ()) {
             pop_farthest ();
         }
-        lru_object::cache.emplace_front (key, get_page (key));
-        lru_object::hash.emplace        (key, lru_object::cache.begin ());
+        lru_cache.cache.emplace_front (key, get_page (key));
+        lru_cache.hash.emplace        (key, lru_cache.cache.begin ());
         update_data_occur_hash (key);
         return false;
     }
 
     auto elem = hit->second;
-    if (elem != lru_object::cache.begin ()) {
-        lru_object::cache.splice (lru_object::cache.begin (), lru_object::cache, elem);
+    if (elem != lru_cache.cache.begin ()) {
+        lru_cache.cache.splice (lru_cache.cache.begin (), lru_cache.cache, elem);
     }
     update_data_occur_hash (key);
     return true;
@@ -41,26 +35,23 @@ bool perf_lru_t<T, KeyT>::check_update (KeyT key, int(*get_page)(int)) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T, typename KeyT>
-type_of_pop_t perf_lru_t<T, KeyT>::pop_farthest () {
+void perf_lru_t<T, KeyT>::pop_farthest () {
     list_iter latest_access_page = find_farthest ();
-    ASSERT(latest_access_page != cache.end())
+    ASSERT(latest_access_page != lru_cache.cache.end())
 
-    lru_object::hash.erase  (latest_access_page->first);
-    lru_object::cache.erase (latest_access_page);
-
-
+    lru_cache.hash.erase  (latest_access_page->first);
+    lru_cache.cache.erase (latest_access_page);
 
     LOG_DEBUG ("Removed from perf_lru: ", latest_access_page->second, '\n');
-    return type_of_pop_t::POPED_FROM_CACHE;
 }
 
 template <typename T, typename KeyT>
-auto perf_lru_t<T, KeyT>::find_farthest () -> list_iter {
-    auto node = lru_object::cache.begin ();
+typename perf_lru_t<T, KeyT>::list_iter perf_lru_t<T, KeyT>::find_farthest() {
+    auto node = lru_cache.cache.begin ();
     auto latest_access_page = node;
     auto hashed_page = data_occur_hash.find (node->first);
 
-    for (;node != lru_object::cache.end (); node = std::next (node)) {
+    for (;node != lru_cache.cache.end (); node = std::next (node)) {
         hashed_page = data_occur_hash.find (node->first);
 
         if ((hashed_page == data_occur_hash.end ())) {
